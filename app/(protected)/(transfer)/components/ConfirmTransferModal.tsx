@@ -9,7 +9,7 @@ type ConfirmTransferModalProps = {
   accountNumber: string;
   bankName: string;
   onCancel: () => void;
-  onConfirm: (amount: number) => void;
+  onConfirm: (amount: number, narration?: string) => void;
 };
 
 export default function ConfirmTransferModal({
@@ -21,16 +21,14 @@ export default function ConfirmTransferModal({
   onConfirm,
 }: ConfirmTransferModalProps) {
 
+  const MIN_TRANSFER = 10; // ✅ single source
+
   const [rawAmount, setRawAmount] = useState("");
   const [amountError, setAmountError] = useState("");
-
-  // ✅ NEW: store balance
   const [balance, setBalance] = useState(0);
+  const [narration, setNarration] = useState("");
 
-
-  /* ---------------------------------
-     FETCH BALANCE WHEN MODAL OPENS
-  ---------------------------------- */
+  /* ---------------- FETCH BALANCE ---------------- */
   useEffect(() => {
     if (!isOpen) return;
 
@@ -42,183 +40,137 @@ export default function ConfirmTransferModal({
     loadBalance();
   }, [isOpen]);
 
-
   if (!isOpen) return null;
 
-
-  /* -------------------------------
-     Helpers
-  -------------------------------- */
+  /* ---------------- FORMAT ---------------- */
   const formatAmount = (value: string) => {
     if (!value) return "";
-
     const [intPart, decimalPart] = value.split(".");
     const formattedInt = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-    return decimalPart !== undefined
-      ? `${formattedInt}.${decimalPart}`
-      : formattedInt;
+    return decimalPart !== undefined ? `${formattedInt}.${decimalPart}` : formattedInt;
   };
 
+  /* ---------------- SAFE PARSE ---------------- */
+  const parseAmount = (value: string) => {
+    if (!value) return NaN;
+    const clean = value.replace(/,/g, "");
+    return Math.round(Number(clean) * 100) / 100; // avoid float bugs
+  };
 
-  /* -------------------------------
-     REALTIME VALIDATION
-  -------------------------------- */
+  /* ---------------- VALIDATION ---------------- */
+  const validate = (amount: number) => {
+    if (isNaN(amount)) return "Invalid amount";
+    if (amount < MIN_TRANSFER)
+      return `Minimum transfer amount is ₦${MIN_TRANSFER}.00`;
+    if (amount > balance)
+      return "Insufficient funds";
+    return "";
+  };
+
   const handleChange = (input: string) => {
     const clean = input.replace(/,/g, "");
 
+    // allow only valid money input
     if (!/^\d*\.?\d{0,2}$/.test(clean)) return;
 
     setRawAmount(clean);
 
-    const amount = Number(clean);
-
-    if (!clean) {
-      setAmountError("");
-      return;
-    }
-
-    if (isNaN(amount)) {
-      setAmountError("Invalid amount");
-      return;
-    }
-
-    if (amount < 10) {
-      setAmountError("Minimum transfer amount is ₦10.00");
-      return;
-    }
-
-    // ✅ NEW: insufficient funds check
-    if (amount > balance) {
-      setAmountError("Insufficient funds");
-      return;
-    }
-
-    setAmountError("");
+    const parsed = parseAmount(clean);
+    setAmountError(validate(parsed));
   };
 
+  /* ---------------- BUTTON LOGIC (SINGLE SOURCE) ---------------- */
+  const parsedAmount = parseAmount(rawAmount);
+  const errorMessage = validate(parsedAmount);
+  const isAmountValid = rawAmount !== "" && !errorMessage;
 
+  /* ---------------- CONFIRM ---------------- */
   const handleConfirm = () => {
-    const amount = Number(rawAmount);
+    if (!isAmountValid) return;
 
-    if (amount < 10) {
-      setAmountError("Minimum transfer amount is ₦10.00");
-      return;
-    }
-
-    // ✅ NEW: block confirm if insufficient
-    if (amount > balance) {
-      setAmountError("Insufficient funds");
-      return;
-    }
-
-    onConfirm(amount);
+    onConfirm(parsedAmount, narration?.trim() || null);
   };
-
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
       <div className="bg-white rounded-2xl w-full max-w-lg p-8">
 
-        {/* Title */}
         <h3 className="text-lg font-semibold text-primary mb-2">
           Confirm Transfer
         </h3>
 
-        <p className="text-sm text-gray-600 mb-4">
-          Please confirm the recipient and enter amount
-        </p>
-
-        {/* Recipient Info */}
+        {/* Recipient */}
         <div className="bg-gray-50 rounded-2xl p-4 mb-6 space-y-4">
           <div>
-            <p className="text-[11px] text-gray-500 uppercase tracking-wide">
-              Recipient Name
-            </p>
-            <p className="font-semibold text-green-600 text-lg leading-tight">
-              {fullName}
-            </p>
-          </div>
-
-          <div className="h-px bg-gray-200" />
-
-          <div>
-            <p className="text-[11px] text-gray-500 uppercase tracking-wide">
-              Account Number
-            </p>
-            <p className="text-sm font-medium text-gray-700 font-mono tracking-wide">
-              {accountNumber}
-            </p>
+            <p className="text-xs text-gray-500">Recipient Name</p>
+            <p className="font-semibold text-green-600">{fullName}</p>
           </div>
 
           <div>
-            <p className="text-[11px] text-gray-500 uppercase tracking-wide">
-              Bank Name
-            </p>
-            <p className="text-sm font-normal text-gray-600">
-              {bankName}
-            </p>
+            <p className="text-xs text-gray-500">Account Number</p>
+            <p className="font-mono">{accountNumber}</p>
+          </div>
+
+          <div>
+            <p className="text-xs text-gray-500">Bank</p>
+            <p>{bankName}</p>
           </div>
         </div>
 
-        {/* AMOUNT INPUT */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-primary mb-2">
-            Amount
-          </label>
+        {/* Amount */}
+        <div className="mb-4">
+          <label className="text-sm font-medium">Amount</label>
+          <input
+            value={formatAmount(rawAmount)}
+            onChange={(e) => handleChange(e.target.value)}
+            className="w-full h-12 px-4 rounded-xl border mt-2"
+            placeholder="₦0.00"
+          />
 
-          <div className="relative">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
-              ₦
-            </span>
-            <input
-              type="text"
-              inputMode="decimal"
-              placeholder="0.00"
-              value={formatAmount(rawAmount)}
-              onChange={(e) => handleChange(e.target.value)}
-              className="w-full h-14 pl-10 pr-4 rounded-xl border border-gray-300
-              focus:outline-none focus:ring-2 focus:ring-yellow-400
-              text-lg font-semibold"
-            />
-          </div>
-
-          {amountError ? (
+          {(amountError || errorMessage) && (
             <p className="text-xs text-red-600 mt-1">
-              {amountError}
-            </p>
-          ) : (
-            <p className="text-xs text-gray-500 mt-1">
-              Example: 1,000.00 or 25,500.75
+              {amountError || errorMessage}
             </p>
           )}
-
         </div>
 
-        {/* ACTIONS */}
-        <div className="flex gap-3 pt-4">
+        {/* Narration */}
+        <div className="mb-6">
+          <label className="text-sm font-medium">
+            Narration (optional)
+          </label>
+
+          <textarea
+            value={narration}
+            onChange={(e) => setNarration(e.target.value)}
+            placeholder="Add note for this transfer..."
+            rows={3}
+            className="w-full mt-2 px-4 py-3 rounded-xl border resize-none"
+          />
+        </div>
+
+        {/* Buttons */}
+        <div className="flex gap-3">
           <button
-            type="button"
             onClick={onCancel}
-            className="w-1/2 h-12 rounded-xl border border-gray-300
-            text-gray-600 hover:bg-gray-100 transition cursor-pointer"
+            className="w-1/2 border rounded-xl h-12"
           >
             Cancel
           </button>
 
           <button
-            type="button"
             onClick={handleConfirm}
-            disabled={!rawAmount || Number(rawAmount) <= 0 || !!amountError}
-            className={`w-1/2 h-12 rounded-xl font-semibold transition
-            ${!rawAmount || Number(rawAmount) <= 0 || amountError
-                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                : "bg-primary text-white hover:opacity-90 cursor-pointer"}`}
+            disabled={!isAmountValid}
+            className={`w-1/2 rounded-xl h-12 font-semibold transition
+              ${
+                !isAmountValid
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : "bg-primary text-white hover:opacity-90 cursor-pointer"
+              }`}
           >
             Continue
           </button>
         </div>
-
       </div>
     </div>
   );
