@@ -2,11 +2,23 @@
 
 import React, { useMemo } from "react";
 
-export default function AccountLimit({ transactions = [] }) {
+type Transaction = {
+  amount: number | string;
+};
+
+type Props = {
+  transactions?: Transaction[];
+};
+
+export default function AccountLimit({ transactions = [] }: Props) {
   const stats = useMemo(() => {
     if (!transactions.length) return null;
 
-    const amounts = transactions.map((t) => Number(t.amount));
+    const amounts = transactions
+      .map((t) => Number(t.amount))
+      .filter((n) => !isNaN(n));
+
+    if (!amounts.length) return null;
 
     return {
       highest: Math.max(...amounts),
@@ -24,16 +36,18 @@ export default function AccountLimit({ transactions = [] }) {
 
       {/* STATS */}
       <div className="md:col-span-2 bg-white rounded-2xl p-6">
-        <h3 className="font-semibold mb-4 text-primary">Transaction Stats</h3>
+        <h3 className="font-semibold mb-4 text-primary">
+          Transaction Stats
+        </h3>
 
         <div className="space-y-3">
           <Row
             label="Highest Transaction"
-            value={stats ? stats.highest : 0}
+            value={stats?.highest ?? 0}
           />
           <Row
             label="Lowest Transaction"
-            value={stats ? stats.lowest : 0}
+            value={stats?.lowest ?? 0}
           />
         </div>
       </div>
@@ -41,7 +55,12 @@ export default function AccountLimit({ transactions = [] }) {
   );
 }
 
-function Row({ label, value }) {
+type RowProps = {
+  label: string;
+  value: number | string;
+};
+
+function Row({ label, value }: RowProps) {
   return (
     <div className="flex justify-between bg-gray-50 p-4 rounded-xl">
       <span>{label}</span>

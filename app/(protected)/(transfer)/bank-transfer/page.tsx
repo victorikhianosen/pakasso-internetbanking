@@ -22,7 +22,7 @@ export default function BankTransferPage() {
   const [bankCode, setBankCode] = useState("");
   const [banks, setBanks] = useState<any[]>([]);
   const [loading, setLoading] = useState(false)
-const [errors, setErrors] = useState("");
+  const [errors, setErrors] = useState("");
 
 
   const [fullName, setFullName] = useState("");
@@ -189,14 +189,14 @@ const [errors, setErrors] = useState("");
       />
 
 
-     <TransferPinModal
-  isOpen={showPinModal}
-  onCancel={() => {
-    setShowPinModal(false);
-    setTransferAmount(null);
-  }}
-  onConfirm={(pin) => handleTransfer(pin)}
-/>
+      <TransferPinModal
+        isOpen={showPinModal}
+        onCancel={() => {
+          setShowPinModal(false);
+          setTransferAmount(null);
+        }}
+        onConfirm={(pin) => handleTransfer(pin)}
+      />
 
 
       <SuccessModal

@@ -105,19 +105,22 @@ function PinInput({
 
       <div className="flex justify-center gap-4">
         {[0, 1, 2, 3].map((i) => (
-          <input
-            key={i}
-            ref={(el) => (inputsRef.current[i] = el)}
-            type="password"
-            inputMode="numeric"
-            maxLength={1}
-            value={value[i] || ""}
-            onChange={(e) => handleChange(e.target.value, i)}
-            onKeyDown={(e) =>
-              e.key === "Backspace" && handleBackspace(i)
-            }
-            className="w-14 h-14 text-center text-xl font-semibold rounded-xl border"
-          />
+       <input
+  key={i}
+  ref={(el) => {
+    inputsRef.current[i] = el;
+  }}
+  type="password"
+  inputMode="numeric"
+  maxLength={1}
+  value={value[i] || ""}
+  onChange={(e) => handleChange(e.target.value, i)}
+  onKeyDown={(e) =>
+    e.key === "Backspace" && handleBackspace(i)
+  }
+  className="w-14 h-14 text-center text-xl font-semibold rounded-xl border"
+/>
+
         ))}
       </div>
     </div>

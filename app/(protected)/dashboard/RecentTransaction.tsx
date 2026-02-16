@@ -1,36 +1,24 @@
 "use client";
 
-import React, { useEffect, useRef, useState, useMemo } from "react";
-import { getTransactions } from "@/app/actions/dashboard/get-transactions.action";
+import React, { useMemo } from "react";
 import { ArrowUpRight, ArrowDownLeft } from "lucide-react";
 
-export default function RecentTransaction() {
-  const hasFetched = useRef(false);
+/* ✅ shared type */
+export type Transaction = {
+  amount: number | string;
+  transaction_type?: "debit" | "credit";
+  transfer_type?: string;
+  sender_name?: string;
+  recipient_name?: string;
+  created_at?: string;
+};
 
-  const [transactions, setTransactions] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  /* ---------------- Fetch ---------------- */
-  useEffect(() => {
-    if (hasFetched.current) return;
-    hasFetched.current = true;
-
-    const load = async () => {
-      try {
-        const res = await getTransactions();
-        const list = res?.data?.transactions ?? [];
-
-        setTransactions(list);
-      } catch (err) {
-        console.error(err);
-        setTransactions([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    load();
-  }, []);
+export default function RecentTransaction({
+  transactions = [],
+}: {
+  transactions: Transaction[];
+}) {
+  const loading = transactions.length === 0;
 
   /* ---------------- Stats (frontend only) ---------------- */
   const stats = useMemo(() => {
@@ -47,7 +35,7 @@ export default function RecentTransaction() {
   }, [transactions]);
 
   /* ---------------- Title logic ---------------- */
-  const getTitle = (t) => {
+  const getTitle = (t: Transaction) => {
     if (t.transfer_type === "inward_transfer") {
       return `Transfer From ${t.sender_name}`;
     }
@@ -62,13 +50,8 @@ export default function RecentTransaction() {
   /* ---------------- UI ---------------- */
   return (
     <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-      {/* Header */}
       <h3 className="font-semibold text-lg mb-5">Recent Transactions</h3>
 
-      {/* ---------------- Stats Cards ---------------- */}
-    
-
-      {/* ---------------- List ---------------- */}
       <div className="space-y-3">
         {loading &&
           [...Array(4)].map((_, i) => (
@@ -117,24 +100,12 @@ export default function RecentTransaction() {
                   isDebit ? "text-red-500" : "text-green-600"
                 }`}
               >
-                {isDebit ? "−" : "+"} ₦{t.amount}
+                {isDebit ? "−" : "+"} ₦{Number(t.amount).toLocaleString()}
               </p>
             </div>
           );
         })}
       </div>
-    </div>
-  );
-}
-
-/* ---------------- Small reusable Stat card ---------------- */
-function Stat({ label, value, isMoney = true }) {
-  return (
-    <div className="bg-gray-50 rounded-xl p-3 text-center">
-      <p className="text-xs text-gray-400">{label}</p>
-      <p className="font-semibold text-sm mt-1">
-        {isMoney ? `₦${Number(value).toLocaleString()}` : value}
-      </p>
     </div>
   );
 }

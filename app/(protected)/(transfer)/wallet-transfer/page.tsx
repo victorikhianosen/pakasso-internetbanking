@@ -187,24 +187,20 @@ export default function WalletTransferPage() {
 
 
 
-      <TransferPinModal
-        isOpen={showPinModal}
-        fullName={fullName}
-        accountNumber={accountNumber}
-        bankName={bankName}
-        onCancel={() => {
-          setShowPinModal(false);
-          setTransferAmount(null);
-          setError(""); // optional clear
-        }}
-        onConfirm={(pin) => {
-          handleTransfer(pin);
+   <TransferPinModal
+  isOpen={showPinModal}
+  onCancel={() => {
+    setShowPinModal(false);
+    setTransferAmount(null);
+    setError("");
+  }}
+  onConfirm={(pin) => {
+    handleTransfer(pin);
+    setShowPinModal(false);
+  }}
+/>
 
-          setShowPinModal(false);
-
-
-        }}
-      />
+   
 
       <SuccessModal
         isOpen={showSuccessModal}

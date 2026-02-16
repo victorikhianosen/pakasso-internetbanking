@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-
 import { useUser } from "@/context/UserContext";
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -16,13 +15,21 @@ import {
   ArrowLeft,
 } from "lucide-react";
 
-export default function ProfilePage() {
-  const { user } = useUser();
+type UserType = {
+  first_name?: string;
+  last_name?: string;
+  email?: string;
+  phone?: string;
+  accountno?: string;
+  bvn?: string;
+};
 
-  const [cachedUser, setCachedUser] = useState(null);
+export default function ProfilePage() {
+  const { user } = useUser() as { user: UserType | null };
+
+  const [cachedUser, setCachedUser] = useState<UserType | null>(null);
   const displayUser = user || cachedUser;
 
-  /* cache like BalanceCard */
   useEffect(() => {
     const saved = localStorage.getItem("cachedUser");
     if (saved) setCachedUser(JSON.parse(saved));
@@ -41,74 +48,59 @@ export default function ProfilePage() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <ProfileDetails user={displayUser} />
-        {/* <ProfileSecurity /> */}
       </div>
     </div>
   );
 }
 
-/* =========================================================
-   MODERN HEADER (glass + big avatar)
-========================================================= */
-function ProfileHeader({ user }) {
-    const router = useRouter();
+function ProfileHeader({ user }: { user: UserType | null }) {
+  const router = useRouter();
 
   return (
-   <>
-   <button
+    <>
+      <button
         onClick={() => router.back()}
         className="flex cursor-pointer items-center gap-2 mb-4 text-sm font-medium text-primary hover:-translate-x-1 transition"
       >
         <ArrowLeft size={18} />
         Back
       </button>
-      
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary to-[#1f272f] text-white p-10 shadow-xl">
 
-      <div className="flex flex-col md:flex-row items-center gap-6">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary to-[#1f272f] text-white p-10 shadow-xl">
+        <div className="flex flex-col md:flex-row items-center gap-6">
+          <div className="relative">
+            <div className="w-28 h-28 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-4xl font-bold">
+              {user?.first_name?.[0] || "U"}
+            </div>
 
-        {/* Avatar */}
-        <div className="relative">
-          <div className="w-28 h-28 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-4xl font-bold">
-            {user?.first_name?.[0] || "U"}
+            <button className="absolute -bottom-1 -right-1 bg-white text-primary p-2 rounded-full shadow hover:scale-95 transition">
+              <Camera size={16} />
+            </button>
           </div>
 
-          {/* camera button */}
-          <button className="absolute -bottom-1 -right-1 bg-white text-primary p-2 rounded-full shadow hover:scale-95 transition">
-            <Camera size={16} />
-          </button>
-        </div>
+          <div className="text-center md:text-left">
+            <h1 className="text-3xl font-semibold capitalize tracking-tight">
+              {user?.first_name} {user?.last_name}
+            </h1>
 
-        {/* Info */}
-        <div className="text-center md:text-left">
-          <h1 className="text-3xl font-semibold capitalize tracking-tight">
-            {user?.first_name} {user?.last_name}
-          </h1>
+            <p className="opacity-80 text-sm mt-1">{user?.email}</p>
 
-          <p className="opacity-80 text-sm mt-1">
-            {user?.email}
-          </p>
-
-          <Link
-            href="/edit-profile"
-            className="inline-block mt-4 bg-white text-primary px-5 py-2 rounded-xl text-sm font-semibold hover:scale-95 transition"
-          >
-            Edit Profile
-          </Link>
+            <Link
+              href="/edit-profile"
+              className="inline-block mt-4 bg-white text-primary px-5 py-2 rounded-xl text-sm font-semibold hover:scale-95 transition"
+            >
+              Edit Profile
+            </Link>
+          </div>
         </div>
       </div>
-    </div>
-   </>
+    </>
   );
 }
 
-/* =========================================================
-   DETAILS CARD (clean + minimal)
-========================================================= */
-function ProfileDetails({ user }) {
+function ProfileDetails({ user }: { user: UserType | null }) {
   return (
     <div className="md:col-span-2 bg-white rounded-3xl p-7 shadow-sm border border-gray-100">
-
       <h3 className="font-semibold text-primary mb-6 text-lg">
         Personal Information
       </h3>
@@ -138,45 +130,33 @@ function ProfileDetails({ user }) {
   );
 }
 
-/* =========================================================
-   SECURITY CARD
-========================================================= */
-function ProfileSecurity() {
-  return (
-    <div className="bg-white rounded-3xl p-7 shadow-sm border border-gray-100">
-      <h3 className="font-semibold text-primary mb-4 text-lg">Security</h3>
-
-      <div className="divide-y">
-        <ActionLink href="/settings" label="Account Settings" />
-      </div>
-    </div>
-  );
-}
-
-
-
-/* =========================================================
-   ROW (modern list style)
-========================================================= */
-function Row({ icon, label, children }) {
+function Row({
+  icon,
+  label,
+  children,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  children: React.ReactNode;
+}) {
   return (
     <div className="flex items-center justify-between py-4 first:pt-0 last:pb-0">
       <div className="flex items-center gap-3 text-gray-500 text-sm">
         {icon}
         {label}
       </div>
-
-      <span className="font-medium text-primary text-sm">
-        {children}
-      </span>
+      <span className="font-medium text-primary text-sm">{children}</span>
     </div>
   );
 }
 
-/* =========================================================
-   LINK ITEM (fintech style)
-========================================================= */
-function ActionLink({ href, label }) {
+function ActionLink({
+  href,
+  label,
+}: {
+  href: string;
+  label: string;
+}) {
   return (
     <Link
       href={href}
