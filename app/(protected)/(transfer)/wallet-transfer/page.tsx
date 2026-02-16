@@ -12,12 +12,15 @@ import ConfirmTransferModal from "../components/ConfirmTransferModal";
 import TransferPinModal from "../components/TransferPinModal";
 import SuccessModal from "@/components/SuccessModal";
 import { getBalance } from "@/app/actions/dashboard/get-balance.action";
+import { useUser } from "@/context/UserContext";
 
 
 
 
 export default function WalletTransferPage() {
   const router = useRouter();
+  const { refreshUser } = useUser();
+
   const [account, setAccount] = useState("");
   const [bank, setBank] = useState("");
   const [loading, setLoading] = useState(false);
@@ -34,22 +37,22 @@ export default function WalletTransferPage() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
-  const [balance, setBalance] = useState("•••••••");
-  const hasFetched = useRef(false); 
+const [balance, setBalance] = useState<number>(0);
+  const hasFetched = useRef(false);
 
 
-   useEffect(() => {
-      if (hasFetched.current) return;
-      hasFetched.current = true;
-  
-      const load = async () => {
-        const res = await getBalance();
-        console.log("BALANCE FROMM WALLET", res);
-        setBalance(res?.data?.balance ?? 0);
-      };
-  
-      load();
-    }, [])
+  useEffect(() => {
+    if (hasFetched.current) return;
+    hasFetched.current = true;
+
+    const load = async () => {
+      const res = await getBalance();
+      console.log("BALANCE FROMM WALLET", res);
+      setBalance(res?.data?.balance ?? 0);
+    };
+
+    load();
+  }, [])
 
 
   async function handleNameEnquiry(e: React.FormEvent) {
@@ -143,13 +146,26 @@ export default function WalletTransferPage() {
     try {
       setLoading(true)
       const result = await walletTransfers(payload);
-      if (result.responseCode === '000') {
-        toast.info(result.message);
-        setShowPinModal(false);
-        setSuccessMessage(result.message);
-        setShowConfirmModal(false);
-        setShowSuccessModal(true); return;
-      }
+     if (result.responseCode === '000') {
+  console.log('TRANSF', result);
+
+  toast.info(result.message);
+
+  setShowPinModal(false);
+  setSuccessMessage(result.message);
+  setShowConfirmModal(false);
+  setShowSuccessModal(true);
+
+  // ✅ refresh user (optional)
+  await refreshUser();
+
+  // ✅ reload balance API
+  const balRes = await getBalance();
+  setBalance(balRes?.data?.balance ?? 0);
+
+  return;
+}
+
       if (result.responseCode == '30') {
         toast.error(result.message);
         setError(result.message)
@@ -180,27 +196,24 @@ export default function WalletTransferPage() {
         onCancel={() => setShowConfirmModal(false)}
         onConfirm={(amount) => {
           setTransferAmount(amount);
-          setShowPinModal(true); // Confirm stays open
+          setShowPinModal(true);
         }}
 
       />
 
 
-
-   <TransferPinModal
-  isOpen={showPinModal}
-  onCancel={() => {
-    setShowPinModal(false);
-    setTransferAmount(null);
-    setError("");
-  }}
-  onConfirm={(pin) => {
-    handleTransfer(pin);
-    setShowPinModal(false);
-  }}
-/>
-
-   
+      <TransferPinModal
+        isOpen={showPinModal}
+        onCancel={() => {
+          setShowPinModal(false);
+          setTransferAmount(null);
+          setError("");
+        }}
+        onConfirm={(pin) => {
+          handleTransfer(pin);
+          setShowPinModal(false);
+        }}
+      />
 
       <SuccessModal
         isOpen={showSuccessModal}
