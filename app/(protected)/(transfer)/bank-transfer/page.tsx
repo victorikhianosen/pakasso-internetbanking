@@ -286,53 +286,58 @@ export default function BankTransferPage() {
 
 
                 {/* BANK */}
-                <div className="space-y-1">
-                  <label className="text-sm font-medium text-primary">
-                    Bank
-                  </label>
+             <div className="space-y-1">
+  <label className="text-sm font-medium text-primary">
+    Bank
+  </label>
 
+  <div className="w-full">
+    <Select
+      options={banks.map((b) => ({
+        value: b.bank_code,
+        label: b.bank_name,
+      }))}
+      placeholder="Search & select bank"
+      value={
+        bankCode
+          ? {
+              value: bankCode,
+              label: bankName,
+            }
+          : null
+      }
+      onChange={(selected: any) => {
+        setBankCode(selected?.value || "");
+        setBankName(selected?.label || "");
+      }}
+      isSearchable
+      menuPortalTarget={typeof window !== "undefined" ? document.body : null}
+      menuPosition="fixed"
+      styles={{
+        control: (base, state) => ({
+          ...base,
+          height: 48,
+          borderRadius: "12px",
+          borderColor: state.isFocused ? "#6366f1" : "#e5e7eb",
+          boxShadow: "none",
+          paddingLeft: "4px",
+          "&:hover": { borderColor: "#6366f1" },
+        }),
+        valueContainer: (base) => ({
+          ...base,
+          padding: "0 8px",
+        }),
+        menu: (base) => ({
+          ...base,
+          borderRadius: "12px",
+          overflow: "hidden",
+          zIndex: 9999,
+        }),
+      }}
+    />
+  </div>
+</div>
 
-
-                  <Select
-                    options={banks.map((b) => ({
-                      value: b.bank_code,
-                      label: b.bank_name,
-                    }))}
-                    placeholder="Search & select bank"
-                    value={
-                      bankCode
-                        ? {
-                          value: bankCode,
-                          label: bankName,
-                        }
-                        : null
-                    }
-                    onChange={(selected: any) => {
-                      setBankCode(selected?.value || "");
-                      setBankName(selected?.label || "");
-                    }}
-                    isSearchable
-                    menuHeight={200}
-                    styles={{
-                      control: (base, state) => ({
-                        ...base,
-                        height: 48,
-                        borderRadius: "12px",
-                        borderColor: state.isFocused ? "#6366f1" : "#e5e7eb",
-                        boxShadow: "none",
-                        "&:hover": { borderColor: "#6366f1" },
-                      }),
-                      menu: (base) => ({
-                        ...base,
-                        borderRadius: "12px",
-                        overflow: "hidden",
-                        zIndex: 9999,
-                      }),
-                    }}
-                  />
-
-
-                </div>
 
                 {/* NEXT BUTTON */}
                 <button
