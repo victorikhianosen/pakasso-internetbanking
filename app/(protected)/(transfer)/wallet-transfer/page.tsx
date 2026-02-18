@@ -14,9 +14,6 @@ import SuccessModal from "@/components/SuccessModal";
 import { getBalance } from "@/app/actions/dashboard/get-balance.action";
 import { useUser } from "@/context/UserContext";
 
-
-
-
 export default function WalletTransferPage() {
   const router = useRouter();
   const { refreshUser } = useUser();
@@ -37,9 +34,8 @@ export default function WalletTransferPage() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
-const [balance, setBalance] = useState<number>(0);
+  const [balance, setBalance] = useState<number>(0);
   const hasFetched = useRef(false);
-
 
   useEffect(() => {
     if (hasFetched.current) return;
@@ -52,27 +48,25 @@ const [balance, setBalance] = useState<number>(0);
     };
 
     load();
-  }, [])
-
+  }, []);
 
   async function handleNameEnquiry(e: React.FormEvent) {
     e.preventDefault();
 
     if (!account)
-      return setError("Account number is required"),
-        toast.error("Account number is required");
+      return (setError("Account number is required"), toast.error("Account number is required"));
 
     if (account.length !== 10)
-      return setError("Account number must be 11 digits"),
-        toast.error("Account number must be 11 digits");
-
-
+      return (
+        setError("Account number must be 11 digits"),
+        toast.error("Account number must be 11 digits")
+      );
 
     const payload = {
-      account_number: account
-    }
+      account_number: account,
+    };
 
-    setLoading(true)
+    setLoading(true);
 
     try {
       const res = await walletNameEnquiry(payload);
@@ -88,7 +82,6 @@ const [balance, setBalance] = useState<number>(0);
         setShowConfirmModal(true);
         return;
       }
-
 
       if (res?.responseCode === "400") {
         toast.error(res.message || "Session expired");
@@ -107,20 +100,17 @@ const [balance, setBalance] = useState<number>(0);
         router.replace("/login");
         return;
       }
-      setLoading(false)
+      setLoading(false);
 
       if (res?.responseCode === "422") {
-        const msg =
-          res?.errors?.account_number?.[0] ||
-          res?.message ||
-          "Invalid account number";
+        const msg = res?.errors?.account_number?.[0] || res?.message || "Invalid account number";
 
         setError(msg);
         toast.error(msg);
         return;
       }
       toast.error(res?.message || "Account verification failed");
-      setError(res?.message)
+      setError(res?.message);
       return;
     } catch (error) {
       console.error("Name enquiry error:", error);
@@ -128,63 +118,57 @@ const [balance, setBalance] = useState<number>(0);
     } finally {
       setLoading(false);
     }
-
   }
 
-
   async function handleTransfer(pin: string) {
-
     const payload = {
       amount: transferAmount,
       destination_account: accountNumber,
       receipient_name: fullName,
       transaction_pin: pin,
-      platform: 'web'
+      platform: "web",
     };
-    console.log('PayLoad..', payload)
+    console.log("PayLoad..", payload);
 
     try {
-      setLoading(true)
+      setLoading(true);
       const result = await walletTransfers(payload);
-     if (result.responseCode === '000') {
-  console.log('TRANSF', result);
+      if (result.responseCode === "000") {
+        console.log("TRANSF", result);
 
-  toast.info(result.message);
+        toast.info(result.message);
 
-  setShowPinModal(false);
-  setSuccessMessage(result.message);
-  setShowConfirmModal(false);
-  setShowSuccessModal(true);
+        setShowPinModal(false);
+        setSuccessMessage(result.message);
+        setShowConfirmModal(false);
+        setShowSuccessModal(true);
 
-  // ✅ refresh user (optional)
-  await refreshUser();
+        // ✅ refresh user (optional)
+        await refreshUser();
 
-  // ✅ reload balance API
-  const balRes = await getBalance();
-  setBalance(balRes?.data?.balance ?? 0);
+        // ✅ reload balance API
+        const balRes = await getBalance();
+        setBalance(balRes?.data?.balance ?? 0);
 
-  return;
-}
+        return;
+      }
 
-      if (result.responseCode == '30') {
+      if (result.responseCode == "30") {
         toast.error(result.message);
-        setError(result.message)
-        setShowPinModal(true)
-        setLoading(false)
+        setError(result.message);
+        setShowPinModal(true);
+        setLoading(false);
         return;
       }
       console.log(result);
-      setLoading(false)
+      setLoading(false);
       toast.error(result.message);
       return;
-
     } catch (error) {
-
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
-
 
   return (
     <>
@@ -198,9 +182,7 @@ const [balance, setBalance] = useState<number>(0);
           setTransferAmount(amount);
           setShowPinModal(true);
         }}
-
       />
-
 
       <TransferPinModal
         isOpen={showPinModal}
@@ -221,46 +203,36 @@ const [balance, setBalance] = useState<number>(0);
         onClose={() => setShowSuccessModal(false)}
       />
 
-
       <Loader show={loading} />
       <div className="min-h-screen bg-muted">
         <div className="max-w-5xl mx-auto">
           <button
             onClick={() => router.back()}
-            className="flex cursor-pointer justify-center items-center gap-2 text-sm font-medium text-primary hover:opacity-70 w-fit"
-          >
+            className="flex cursor-pointer justify-center items-center gap-2 text-sm font-medium text-primary hover:opacity-70 w-fit">
             <span className="text-lg">←</span>
             Back
           </button>
 
           <div className="space-y-8">
             <div className="flex items-center justify-between">
-              <h1 className="text-xl font-semibold text-primary">
-                Transfer To Pakasso Account
-              </h1>
+              <h1 className="text-xl font-semibold text-primary">Transfer To Pakasso Account</h1>
               <button className="text-sm font-medium text-green-600 hover:underline">
                 History
               </button>
             </div>
 
             {/* PROMO BANNER */}
-            <div className="rounded-2xl bg-gradient-to-r from-yellow-600 to-primary text-white px-8 py-6 flex items-center justify-between">
+            <div className="rounded-2xl bg-gradient-to-r from-yellow-600 to-primary text-white px-8 lg:py-6 py-4 lg:flex items-center justify-between">
               <div>
-                <p className="text-sm opacity-90">
-                  Transfer to Wallet
-                </p>
-                <p className="font-semibold mt-1">
-                  Use your balance to send money instantly
-                </p>
-
+                <p className="text-sm opacity-90">Transfer to Other Banks</p>
+                <p className="font-semibold mt-1">Use your balance to send money instantly</p>
+                <div className="text-4xl font-bold lg:hidden mt-4">₦{balance.toLocaleString()}</div>
                 <button className="mt-4 bg-black text-white text-sm px-4 py-2 rounded-lg">
                   Top up Now
                 </button>
               </div>
 
-              <div className="text-4xl font-bold">
-                ₦{balance.toLocaleString()}
-              </div>
+              <div className="text-4xl font-bold hidden lg:block">₦{balance.toLocaleString()}</div>
             </div>
 
             {/* FREE TRANSFERS */}
@@ -269,34 +241,24 @@ const [balance, setBalance] = useState<number>(0);
             </div>
 
             {/* FORM CARD */}
-            <form onSubmit={handleNameEnquiry} className="bg-background border border-border rounded-3xl p-10 max-w-6xl">
-
-              <h2 className="text-lg font-semibold text-primary mb-6">
-                Recipient Account
-              </h2>
+            <form
+              onSubmit={handleNameEnquiry}
+              className="bg-background border border-border rounded-3xl p-10 max-w-6xl">
+              <h2 className="text-lg font-semibold text-primary mb-6">Recipient Account</h2>
 
               <div className="space-y-5">
-
                 {/* ACCOUNT NUMBER */}
                 <div className="space-y-1">
-                  <label className="text-sm font-medium text-primary">
-                    Account Number
-                  </label>
+                  <label className="text-sm font-medium text-primary">Account Number</label>
                   <input
                     value={account}
                     maxLength={10}
-                    onChange={(e) =>
-                      setAccount(e.target.value.replace(/\D/g, ""))
-                    }
+                    onChange={(e) => setAccount(e.target.value.replace(/\D/g, ""))}
                     placeholder="Enter 10-digit account number"
                     className="w-full h-12 px-4 rounded-xl border border-border
                 focus:outline-none focus:ring-2 focus:ring-secondary"
                   />
-                  {error && (
-                    <p className="text-xs text-red-600 mt-1">
-                      {error}
-                    </p>
-                  )}
+                  {error && <p className="text-xs text-red-600 mt-1">{error}</p>}
                 </div>
 
                 {/* {fullName} */}
@@ -304,8 +266,7 @@ const [balance, setBalance] = useState<number>(0);
                 {/* NEXT BUTTON */}
                 <button
                   className={`w-full cursor-pointer h-14 rounded-full font-semibold transition bg-primary text-white
-                `}
-                >
+                `}>
                   Next
                 </button>
               </div>
@@ -317,15 +278,11 @@ const [balance, setBalance] = useState<number>(0);
                 <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
                   📊
                 </div>
-                <p className="font-medium text-primary">
-                  Bank Transfer Success Rate Monitor
-                </p>
+                <p className="font-medium text-primary">Bank Transfer Success Rate Monitor</p>
               </div>
               <span className="text-gray-400 text-xl">›</span>
             </div>
           </div>
-
-
         </div>
       </div>
     </>

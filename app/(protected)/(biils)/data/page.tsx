@@ -128,17 +128,17 @@ export default function DataPage() {
             </div>
 
             {/* PROMO BANNER */}
-            <div className="rounded-2xl bg-gradient-to-r from-yellow-600 to-primary text-white px-8 py-6 flex items-center justify-between">
+            <div className="rounded-2xl bg-gradient-to-r from-yellow-600 to-primary text-white px-8 lg:py-6 py-4 lg:flex items-center justify-between">
               <div>
-                <p className="text-sm opacity-90">Buy Data</p>
-                <p className="font-semibold mt-1">Use your balance to purchase data instantly</p>
-
+                <p className="text-sm opacity-90">Transfer to Other Banks</p>
+                <p className="font-semibold mt-1">Use your balance to send money instantly</p>
+                <div className="text-4xl font-bold lg:hidden mt-4">₦{balance.toLocaleString()}</div>
                 <button className="mt-4 bg-black text-white text-sm px-4 py-2 rounded-lg">
                   Top up Now
                 </button>
               </div>
 
-              <div className="text-4xl font-bold">₦{balance.toLocaleString()}</div>
+              <div className="text-4xl font-bold hidden lg:block">₦{balance.toLocaleString()}</div>
             </div>
 
             {/* FREE TRANSFERS */}
