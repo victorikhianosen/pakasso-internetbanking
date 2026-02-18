@@ -27,6 +27,7 @@ export default function ConfirmTransferModal({
   const [amountError, setAmountError] = useState("");
   const [balance, setBalance] = useState(0);
   const [narration, setNarration] = useState("");
+  const [narrationError, setNarrationError] = useState("");
 
   /* ---------------- FETCH BALANCE ---------------- */
   useEffect(() => {
@@ -49,6 +50,13 @@ export default function ConfirmTransferModal({
     const formattedInt = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     return decimalPart !== undefined ? `${formattedInt}.${decimalPart}` : formattedInt;
   };
+
+  const validateNarration = (text: string) => {
+    if (!text.trim()) return "Narration is required";
+  if (text.trim().length < 3) return "Narration is too short";
+    return "";
+  };
+
 
   /* ---------------- SAFE PARSE ---------------- */
   const parseAmount = (value: string) => {
@@ -80,17 +88,30 @@ export default function ConfirmTransferModal({
   };
 
   /* ---------------- BUTTON LOGIC (SINGLE SOURCE) ---------------- */
-const parsedAmount = parseAmount(rawAmount);
-const errorMessage = rawAmount ? validate(parsedAmount) : "";
-const isAmountValid = rawAmount !== "" && !errorMessage;
+  const parsedAmount = parseAmount(rawAmount);
+  const errorMessage = rawAmount ? validate(parsedAmount) : "";
+const isNarrationValid = narration.trim().length >= 3;
+  const isAmountValid = rawAmount !== "" && !errorMessage;
+  const isFormValid = isAmountValid && isNarrationValid;
 
 
   /* ---------------- CONFIRM ---------------- */
- const handleConfirm = () => {
-  if (!isAmountValid) return;
+  const handleConfirm = () => {
+    const narrationErr = validateNarration(narration);
+    setNarrationError(narrationErr);
 
-  onConfirm(parsedAmount, narration?.trim() || undefined);
-};
+    if (!isAmountValid || narrationErr) return;
+
+    onConfirm(parsedAmount, narration?.trim() || undefined);
+
+
+    if (narrationErr) {
+      document.querySelector("textarea")?.focus();
+      return;
+    }
+  };
+
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
@@ -138,16 +159,24 @@ const isAmountValid = rawAmount !== "" && !errorMessage;
         {/* Narration */}
         <div className="mb-6">
           <label className="text-sm font-medium">
-            Narration (optional)
+            Narration <span className="text-red-600 text-lg">*</span>
           </label>
 
           <textarea
             value={narration}
-            onChange={(e) => setNarration(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              setNarration(value);
+              setNarrationError(validateNarration(value));
+            }}
             placeholder="Add note for this transfer..."
             rows={3}
             className="w-full mt-2 px-4 py-3 rounded-xl border resize-none"
           />
+          {narrationError && (
+            <p className="text-xs text-red-600 mt-1">{narrationError}</p>
+          )}
+
         </div>
 
         {/* Buttons */}
@@ -161,12 +190,11 @@ const isAmountValid = rawAmount !== "" && !errorMessage;
 
           <button
             onClick={handleConfirm}
-            disabled={!isAmountValid}
+            disabled={!isFormValid}
             className={`w-1/2 rounded-xl h-12 font-semibold transition
-              ${
-                !isAmountValid
-                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  : "bg-primary text-white hover:opacity-90 cursor-pointer"
+              ${!isFormValid
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "bg-primary text-white hover:opacity-90 cursor-pointer"
               }`}
           >
             Continue

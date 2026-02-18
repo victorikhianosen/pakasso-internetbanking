@@ -12,6 +12,7 @@ import ConfirmTransferModal from "../components/ConfirmTransferModal";
 import { toast } from "react-toastify";
 import { bankTransfer } from "@/app/actions/transfer/bank-transfer.acrion";
 import { getBalance } from "@/app/actions/dashboard/get-balance.action";
+import Select from "react-select";
 
 
 
@@ -289,37 +290,54 @@ export default function BankTransferPage() {
                   <label className="text-sm font-medium text-primary">
                     Bank
                   </label>
-                  {/* <select
-                    value={bankCode}
-                    onChange={(e) => setBankCode(e.target.value)}
-                    className="w-full h-12 px-4 rounded-xl border border-border bg-background
-                focus:outline-none focus:ring-2 focus:ring-secondary"
-                  > */}
 
-                  <select
-                    className="w-full h-12 px-4 rounded-xl border border-border bg-background
-                focus:outline-none focus:ring-2 focus:ring-secondary"
-
-                    value={bankCode}
-                    onChange={(e) => {
-                      const code = e.target.value;
-                      setBankCode(code);
-
-                      const selected = banks.find(b => b.bank_code === code);
-                      setBankName(selected?.bank_name || "");
-
-                    }}
-                  >
-
-                    <option value="">Select Bank</option>
-
-                    {banks.map((b) => (
-                      <option key={b.bank_code} value={b.bank_code}>
-                        {b.bank_name}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="w-full">
+                    <Select
+                      options={banks.map((b) => ({
+                        value: b.bank_code,
+                        label: b.bank_name,
+                      }))}
+                      placeholder="Search & select bank"
+                      value={
+                        bankCode
+                          ? {
+                            value: bankCode,
+                            label: bankName,
+                          }
+                          : null
+                      }
+                      onChange={(selected: any) => {
+                        setBankCode(selected?.value || "");
+                        setBankName(selected?.label || "");
+                      }}
+                      isSearchable
+                      menuPortalTarget={typeof window !== "undefined" ? document.body : null}
+                      menuPosition="fixed"
+                      styles={{
+                        control: (base, state) => ({
+                          ...base,
+                          height: 48,
+                          borderRadius: "12px",
+                          borderColor: state.isFocused ? "#6366f1" : "#e5e7eb",
+                          boxShadow: "none",
+                          paddingLeft: "4px",
+                          "&:hover": { borderColor: "#6366f1" },
+                        }),
+                        valueContainer: (base) => ({
+                          ...base,
+                          padding: "0 8px",
+                        }),
+                        menu: (base) => ({
+                          ...base,
+                          borderRadius: "12px",
+                          overflow: "hidden",
+                          zIndex: 9999,
+                        }),
+                      }}
+                    />
+                  </div>
                 </div>
+
 
                 {/* NEXT BUTTON */}
                 <button
