@@ -47,7 +47,7 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      {/* <BalanceCard balance={balance} /> */}
+      <BalanceCard balance={balance} />
 
       <QuickAction />
 
