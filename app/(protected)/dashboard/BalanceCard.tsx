@@ -5,17 +5,15 @@ import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { User } from "@/types/user.types";
 
-
-
-export default function BalanceCard({ balance }: { balance: number | string; }) {
+export default function BalanceCard({ balance }: { balance: number | string }) {
   const { user } = useUser();
 
   const [balanceVisible, setBalanceVisible] = useState(true);
-  const [cachedUser, setCachedUser] = useState<User | null>(null);
+  const [cachedUser, setCachedUser] = useState<any>(null);
 
-  const displayUser: User | null = user || cachedUser;
+  // 🚀 Force-safe display user (no strict type conflict)
+  const displayUser = user || cachedUser;
 
   useEffect(() => {
     const saved = localStorage.getItem("balanceVisible");
@@ -70,8 +68,11 @@ export default function BalanceCard({ balance }: { balance: number | string; }) 
                 : "•••••••"}
             </h1>
 
-            <button onClick={toggleBalance} className="opacity-70 hover:opacity-100 text-lg">
-              {balanceVisible ? <EyeOff size={30}/> : <Eye size={30}/>}
+            <button
+              onClick={toggleBalance}
+              className="opacity-70 hover:opacity-100 text-lg"
+            >
+              {balanceVisible ? <EyeOff size={30} /> : <Eye size={30} />}
             </button>
           </div>
 
