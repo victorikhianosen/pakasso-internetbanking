@@ -1,6 +1,6 @@
 "use client";
 
-import AppHeader from "./AppHeader";
+import AppHeader from "@/components/header/AppHeader";
 
 
 export default function ProtectedLayout({

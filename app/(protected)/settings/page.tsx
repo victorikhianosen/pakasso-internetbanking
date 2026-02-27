@@ -3,7 +3,7 @@
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-import SettingsSection from "./components/SettingsSection";
+import SettingsSection from "../../../features/settings/components/SettingsSection";
 
 export default function SettingsPage() {
   const router = useRouter();
