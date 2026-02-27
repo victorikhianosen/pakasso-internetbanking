@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 
-import { privateHeaders, publicHeaders } from "@/lib/httpHeaders";
+import { publicHeaders } from "@/lib/httpHeaders";
 
 const baseUrl = process.env.BASE_URL;
 
