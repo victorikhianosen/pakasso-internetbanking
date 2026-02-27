@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useUser } from "@/context/UserContext";
+import { UseUser } from "@/context/UserContext";
 import { useEffect, useState } from "react";
 import { ArrowLeft, Camera, Loader2 } from "lucide-react";
 import { UpdateProfile } from "@/app/actions/settings/profile/update-profile";
@@ -13,7 +13,7 @@ import { User as UserType } from "@/types/user.types";
 import Image from "next/image";
 
 export default function EditProfilePage() {
-  const { user } = useUser();
+  const { user } = UseUser();
 
   const [cachedUser, setCachedUser] = useState<UserType | null>(null);
   const [form, setForm] = useState<UserType | null>(null);

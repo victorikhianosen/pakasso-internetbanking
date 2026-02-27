@@ -1,59 +1,32 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import QuickAction from "./QuickAction";
-import BalanceCard from "./BalanceCard";
-import AccountLimit from "./AccountLimit";
-import RecentTransaction from "./RecentTransaction";
-import { getBalance } from "@/app/actions/dashboard/get-balance.action";
-import { getTransactions } from "@/app/actions/dashboard/get-transactions.action";
-
-/* ✅ shared type */
-export type Transaction = {
-  amount: number | string;
-  transaction_type?: "debit" | "credit";
-  transfer_type?: string;
-  sender_name?: string;
-  recipient_name?: string;
-  created_at?: string;
-};
+import QuickAction from "../../../components/dasboard Components/QuickAction";
+import BalanceCard from "../../../components/dasboard Components/BalanceCard";
+import AccountLimit from "../../../components/dasboard Components/AccountLimit";
+import RecentTransaction from "../../../components/dasboard Components/RecentTransaction";
+import { UseGetBalance } from "@/hooks/useBalance";
+import { useGetTransactions } from "@/hooks/useTransactions";
+import { TransactionItem } from "@/types/transaction.types";
 
 export default function DashboardPage() {
-  const hasFetched = useRef(false);
+  const { data: balanceData, isLoading: balanceLoading } = UseGetBalance();
 
-  const [balance, setBalance] = useState(0);
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const { data: transactionData, isLoading: trxLoading } = useGetTransactions();
 
-  useEffect(() => {
-    if (hasFetched.current) return;
-    hasFetched.current = true;
+  const balance = balanceData?.data?.balance ?? 0;
 
-    const load = async () => {
-      try {
-        const [balRes, trxRes] = await Promise.all([
-          getBalance(),
-          getTransactions(),
-        ]);
-
-        setBalance(balRes?.data?.balance ?? 0);
-        setTransactions(trxRes?.data?.transactions ?? []);
-      } catch (e) {
-        console.error(e);
-      }
-    };
-
-    load();
-  }, []);
+  const transactions: TransactionItem[] = transactionData?.data?.transactions ?? [];
+  console.log("Transaction", transactions)
 
   return (
     <div className="space-y-8">
-      <BalanceCard balance={balance} />
+      <BalanceCard balance={String(balance)} loading={balanceLoading} />
 
       <QuickAction />
 
       <AccountLimit transactions={transactions} />
 
-      <RecentTransaction transactions={transactions} />
+      <RecentTransaction transactions={transactions} loading={trxLoading} />
     </div>
   );
 }

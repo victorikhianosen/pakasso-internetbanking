@@ -1,8 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useUser } from "@/context/UserContext";
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   User,
@@ -10,7 +8,6 @@ import {
   Phone,
   CreditCard,
   Shield,
-  Camera,
   ArrowLeft,
   CalendarDays,
   UserLock,
@@ -18,31 +15,19 @@ import {
   SquareUserRound,
 } from "lucide-react";
 import { User as UserType } from "@/types/user.types";
+import Image from "next/image";
+import { UseUser } from "@/context/UserContext";
 
 export default function ViewProfilePage() {
-  const { user } = useUser() as { user: UserType | null };
+  const { user } = UseUser() as { user: UserType | null };
 
-  const [cachedUser, setCachedUser] = useState<UserType | null>(null);
-  const displayUser = user || cachedUser;
-
-  useEffect(() => {
-    const saved = localStorage.getItem("cachedUser");
-    if (saved) setCachedUser(JSON.parse(saved));
-  }, []);
-
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem("cachedUser", JSON.stringify(user));
-      setCachedUser(user);
-    }
-  }, [user]);
 
   return (
     <div className="space-y-8 max-w-5xl mx-auto pb-10">
-      <ProfileHeader user={displayUser} />
+      <ProfileHeader user={user} />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <ProfileDetails user={displayUser} />
+        <ProfileDetails user={user} />
       </div>
     </div>
   );
@@ -64,12 +49,21 @@ function ProfileHeader({ user }: { user: UserType | null }) {
         <div className="flex flex-col md:flex-row items-center gap-6">
           <div className="relative">
             <div className="w-28 h-28 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-4xl font-bold">
-              {user?.first_name?.[0] || "U"}
+              {user?.profilepic ? (
+                <Image
+                  src={user.profilepic}
+                  alt="Passport Preview"
+                  width={112}
+                  height={112}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <>
+                  {user?.last_name?.[0] || ""}
+                  {user?.first_name?.[0] || "U"}
+                </>
+              )}
             </div>
-
-            <button className="absolute -bottom-1 -right-1 bg-white text-primary p-2 rounded-full shadow hover:scale-95 transition">
-              <Camera size={16} />
-            </button>
           </div>
 
           <div className="text-center md:text-left">
