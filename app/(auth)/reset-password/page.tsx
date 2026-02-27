@@ -11,7 +11,7 @@ import Loader from "@/components/shared/Loader";
 export default function ResetPasswordPage() {
   const router = useRouter();
 
-  const resetEmail = typeof window !== "undefined" ? sessionStorage.getItem("reset_email") : null;
+  const resetEmail = typeof window !== "undefined" ? sessionStorage.getItem("reset_email") : "";
 
   const RESEND_TIMEOUT = 10;
 
@@ -119,11 +119,11 @@ export default function ResetPasswordPage() {
 
     try {
       const payload = {
-        email: resetEmail,
+        email: resetEmail as string,
         otp_code: code,
         password,
       };
-
+      
       const res = await resetPassword(payload);
 
       if (res?.status === "success" && res.responseCode === "000") {
