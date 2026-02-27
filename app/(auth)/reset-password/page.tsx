@@ -1,20 +1,17 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import SideBar from "../SideBar";
+import SideBar from "../../../features/auth/components/SideBar";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { resetPassword, forgotPassword } from "@/api/auth.service";
+import { resetPassword, forgotPassword } from "@/features/auth/services/auth.service";
 import { toast } from "react-toastify";
-import Loader from "@/components/Loader";
+import Loader from "@/components/shared/Loader";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
 
-  const resetEmail =
-    typeof window !== "undefined"
-      ? sessionStorage.getItem("reset_email")
-      : null;
+  const resetEmail = typeof window !== "undefined" ? sessionStorage.getItem("reset_email") : null;
 
   const RESEND_TIMEOUT = 10;
 
@@ -54,10 +51,7 @@ export default function ResetPasswordPage() {
   }, [timeLeft]);
 
   const formatTime = (s: number) =>
-    `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(
-      2,
-      "0"
-    )}`;
+    `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
 
   /* -------------------------------
      OTP HANDLERS
@@ -74,10 +68,7 @@ export default function ResetPasswordPage() {
     }
   };
 
-  const handleKeyDown = (
-    e: React.KeyboardEvent<HTMLInputElement>,
-    index: number
-  ) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
     if (e.key !== "Backspace") return;
 
     const updated = [...otp];
@@ -97,13 +88,9 @@ export default function ResetPasswordPage() {
      PASSWORD RULES
   -------------------------------- */
   const passwordValid =
-    password.length >= 8 &&
-    /[A-Z]/.test(password) &&
-    /[a-z]/.test(password) &&
-    /\d/.test(password);
+    password.length >= 8 && /[A-Z]/.test(password) && /[a-z]/.test(password) && /\d/.test(password);
 
-  const passwordsMatch =
-    password && confirmPassword && password === confirmPassword;
+  const passwordsMatch = password && confirmPassword && password === confirmPassword;
 
   /* -------------------------------
      SUBMIT
@@ -158,7 +145,6 @@ export default function ResetPasswordPage() {
       }
 
       toast.error(res?.message || "Request failed");
-
     } catch {
       toast.error("Password reset failed");
     } finally {
@@ -201,7 +187,6 @@ export default function ResetPasswordPage() {
 
         <div className="w-full lg:w-1/2 flex items-center justify-center px-6">
           <div className="w-full max-w-md">
-
             <div className="flex justify-center mb-8">
               <Image
                 src="/assets/images/logo.png"
@@ -234,28 +219,22 @@ export default function ResetPasswordPage() {
               <button
                 type="submit"
                 disabled={loading || !passwordValid || !passwordsMatch}
-                className="w-full py-3 rounded-lg bg-primary text-white font-semibold disabled:opacity-50"
-              >
+                className="w-full py-3 rounded-lg bg-primary text-white font-semibold disabled:opacity-50">
                 Reset Password
               </button>
             </form>
 
             <div className="text-center mt-8">
               {canResend ? (
-                <button
-                  onClick={handleResendOtp}
-                  className="text-primary font-semibold"
-                >
+                <button onClick={handleResendOtp} className="text-primary font-semibold">
                   Resend OTP
                 </button>
               ) : (
                 <p className="text-gray-500">
-                  Resend OTP in{" "}
-                  <span className="font-semibold">{formatTime(timeLeft)}</span>
+                  Resend OTP in <span className="font-semibold">{formatTime(timeLeft)}</span>
                 </p>
               )}
             </div>
-
           </div>
         </div>
       </div>
