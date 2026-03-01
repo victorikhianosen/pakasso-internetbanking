@@ -2,10 +2,11 @@
 
 import { cookies } from "next/headers";
 import { privateHeaders } from "@/lib/httpHeaders";
+import { BankNameEnquiry } from "@/types/transaction.types";
 
 const baseUrl = process.env.BASE_URL;
 
-export async function bankNameEnquiry(payload: any) {
+export async function bankNameEnquiry(payload: BankNameEnquiry) {
     const cookieStore = await cookies();
     const token = cookieStore.get("access_token")?.value;
     if (!token) {
@@ -29,8 +30,7 @@ export async function bankNameEnquiry(payload: any) {
 
         const data = await res.json();
         return data;
-    } catch (error: any) {
-        console.error("SERVER ACTION ERROR:", error);
+    } catch  {
 
         return {
             success: 'error',

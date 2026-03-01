@@ -3,11 +3,12 @@
 
 import { cookies } from "next/headers";
 import { privateHeaders } from "@/lib/httpHeaders";
+import { BankTransfer } from "@/types/transaction.types";
 
 const baseUrl = process.env.BASE_URL;
 
 
-export async function bankTransfer(payload: any) {
+export async function bankTransfer(payload: BankTransfer) {
     const cookieStore = await cookies();
     const token = cookieStore.get("access_token")?.value;
 
@@ -27,7 +28,7 @@ export async function bankTransfer(payload: any) {
         });
 
         return await res.json();
-    } catch (error) {
+    } catch  {
         return {
             responseCode: "500",
             message: "Network error",
