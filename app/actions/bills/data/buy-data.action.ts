@@ -27,8 +27,7 @@ export async function buyData(payload: BuyDataPaylaod) {
         });
 
         return await res.json();
-    } catch (error) {
-        console.log(error);
+    } catch {
         return {
             responseCode: "500",
             message: "Network error",

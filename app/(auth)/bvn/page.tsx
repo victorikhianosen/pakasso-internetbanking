@@ -39,7 +39,6 @@ export default function BvnPage() {
     try {
       const payload = { bvn };
       const res = await verifyBVN(payload);
-      console.log(res);
 
       if (res.status === "success" && res.responseCode === "000") {
         sessionStorage.setItem("bvn_data", JSON.stringify(res.data));

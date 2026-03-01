@@ -14,7 +14,7 @@ export default function Loader({ show }: Props) {
       role="dialog"
       aria-modal="true"
       className="
-                fixed inset-0 z-[9999]
+                fixed inset-0 z-9999
                 flex items-center justify-center
                 bg-black/50
                 pointer-events-auto

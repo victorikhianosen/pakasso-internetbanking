@@ -16,7 +16,6 @@ export default function DashboardPage() {
   const balance = balanceData?.data?.balance ?? 0;
 
   const transactions: TransactionItem[] = transactionData?.data?.transactions ?? [];
-  console.log("Transaction", transactions)
 
   return (
     <div className="space-y-8">

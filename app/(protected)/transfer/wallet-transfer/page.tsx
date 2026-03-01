@@ -22,7 +22,7 @@ export default function WalletTransferPage() {
   const [fullName, setFullName] = useState("");
 
   const [accountNumber, setAccountNumber] = useState("");
-  const [bankName, setBankName] = useState("Pakasso Credit Capital Ltd");
+  const bankName = "Pakasso Credit Capital Ltd";
 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showPinModal, setShowPinModal] = useState(false);
@@ -56,7 +56,6 @@ export default function WalletTransferPage() {
 
     try {
       const res = await walletNameEnquiry(payload);
-      console.log("Wallet Form:", res);
 
       if (res?.responseCode === "000") {
         const { first_name, last_name, account_number } = res.data;
@@ -98,8 +97,7 @@ export default function WalletTransferPage() {
       toast.error(res?.message || "Account verification failed");
       setError(res?.message);
       return;
-    } catch (error) {
-      console.error("Name enquiry error:", error);
+    } catch  {
       toast.error("Unable to verify account. Try again.");
       setShowConfirmModal(true);
     } finally {
@@ -115,13 +113,11 @@ export default function WalletTransferPage() {
       transaction_pin: pin,
       platform: "web",
     };
-    console.log("PayLoad..", payload);
 
     try {
       setLoading(true);
       const result = await walletTransfers(payload);
       if (result.responseCode === "000") {
-        console.log("TRANSF", result);
 
         toast.info(result.message);
 
@@ -144,7 +140,6 @@ export default function WalletTransferPage() {
         setLoading(false);
         return;
       }
-      console.log(result);
       setLoading(false);
       toast.error(result.message);
       return;

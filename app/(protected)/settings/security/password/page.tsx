@@ -76,8 +76,6 @@ export default function ChangePassword() {
 
       const res = await changePassword(payload);
 
-      console.log("Change Password Response:", res);
-
       if (res?.responseCode === "000") {
         toast.success(res.message || "Password updated successfully");
 
@@ -87,8 +85,7 @@ export default function ChangePassword() {
       } else {
         toast.error(res?.message || "Failed to change password");
       }
-    } catch (error) {
-      console.error("Change Password Error:", error);
+    } catch {
       toast.error("Something went wrong. Please try again.");
     } finally {
       setLoading(false);

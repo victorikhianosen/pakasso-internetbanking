@@ -28,7 +28,6 @@ export default function PhoneSetup() {
       return;
     }
     setError("");
-    console.log("Phone:", phone);
     setLoading(true);
 
     try {
@@ -38,7 +37,6 @@ export default function PhoneSetup() {
       };
 
       const res = await sendPhoneOtp(payload);
-      console.log(res);
 
       if (res.status === "success" && res.responseCode === "000") {
         toast.success(res.message);
@@ -83,7 +81,7 @@ export default function PhoneSetup() {
       };
 
       const res = await resentOtp(payload);
-      console.log(res);
+  
       if (res.status === "success") {
         sessionStorage.setItem("phone_otp", phone);
         toast.success(res.message);

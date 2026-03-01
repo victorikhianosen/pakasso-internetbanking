@@ -60,7 +60,6 @@ export default function BankTransferPage() {
       setLoading(true);
 
       const res = await bankNameEnquiry(payload);
-      console.log("NAME ENQUIRY", res);
 
       const isSuccess = res?.status === "success" && res?.responseCode === "000";
 
@@ -98,13 +97,10 @@ export default function BankTransferPage() {
       description: narration,
     };
 
-    console.log("TRANSFER PAYLOAD", payload);
-
     try {
       setLoading(true);
 
       const res = await bankTransfer(payload);
-      console.log("TRANSFER RESPONSE", res);
 
       if (res.responseCode === "000") {
         setShowPinModal(false);

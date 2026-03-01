@@ -23,8 +23,6 @@ export default function BalanceCard({ balance, loading = false }: Props) {
     }
   }, [data, setUser]);
 
-  console.log("user", user)
-
   const toggleBalance = () => {
     setBalanceVisible((prev) => !prev);
   };

@@ -2,19 +2,19 @@
 
 type Props = {
   isOpen: boolean;
-  message?: string; // ✅ add this
+  message?: string;
   onClose: () => void;
 };
 
 export default function SuccessModal({
   isOpen,
-  message = "Your transfer was completed successfully.", // ✅ default text
+  message = "Your transfer was completed successfully.", 
   onClose,
 }: Props) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/40 px-4">
+    <div className="fixed inset-0 z-80 flex items-center justify-center bg-black/40 px-4">
       <div className="bg-white w-full max-w-md rounded-3xl p-10 text-center shadow-xl animate-pop">
 
         {/* ===== Icon + Sparkles wrapper ===== */}

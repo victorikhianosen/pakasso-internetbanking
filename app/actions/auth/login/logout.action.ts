@@ -22,8 +22,7 @@ export async function serverLogout() {
             cookieStore.delete("access_token");
             message = json?.message ?? message;
         }
-    } catch (error) {
-        console.error("Backend logout failed:", error);
+    } catch  {
     }
 
     cookieStore.set("access_token", "", {

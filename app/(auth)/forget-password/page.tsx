@@ -34,8 +34,6 @@ export default function ForgotPasswordPage() {
       const payload = { email };
 
       const res = await forgotPassword(payload);
-      console.log(res);
-
       if (res?.status === "success" && res.responseCode === "000") {
         sessionStorage.setItem("reset_email", email);
         toast.success(res?.message || "Password reset link sent to your email");

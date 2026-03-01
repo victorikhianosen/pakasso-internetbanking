@@ -161,10 +161,8 @@ export default function RegisterPage() {
 
     try {
       setLoading(true);
-      console.log("Payload:", payload);
 
       const res = await registerAccount(payload);
-      console.log("API RES", res);
 
       if (res?.responseCode === "000") {
         toast.success(res?.message || "Account created successfully");

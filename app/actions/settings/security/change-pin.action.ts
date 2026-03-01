@@ -36,8 +36,7 @@ export async function changePin(payload: ChangePin) {
       responseCode: data.responseCode,
       message: data.message,
     };
-  } catch (error) {
-    console.error("SERVER ACTION ERROR:", error);
+  } catch {
 
     return {
       status: "error",

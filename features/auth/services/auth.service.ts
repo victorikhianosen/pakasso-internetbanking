@@ -22,14 +22,12 @@ export async function login(payload: LoginRequest) {
   });
 
   const result = await res.json();
-  console.log(process.env.NODE_ENV);
 
   if (result?.status === "success") {
     const token = result.data.access_token;
     const expiresAt = new Date(result.data.expired_at);
 
     const cookieStore = await cookies();
-    console.log(process.env.NODE_ENV);
 
     cookieStore.set("access_token", token, {
       httpOnly: true,

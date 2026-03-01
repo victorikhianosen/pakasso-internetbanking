@@ -52,13 +52,10 @@ export default function AirtimePage() {
       platform: "web",
     };
 
-    console.log("AIRTIME PAYLOAD", payload);
-
     try {
       setLoading(true);
 
       const res = await buyAirtime(payload);
-      console.log("AIRTIME RESPONSE", res);
 
       if (res.responseCode === "000" && res.status === "success") {
         setShowPinModal(false);

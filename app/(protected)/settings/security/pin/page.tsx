@@ -76,7 +76,6 @@ export default function ChangePin() {
 
       const res = await changePin(payload);
 
-      console.log("Change pin Response:", res);
 
       if (res?.responseCode === "000") {
         toast.success(res.message || "Pin updated successfully");
@@ -87,8 +86,7 @@ export default function ChangePin() {
       } else {
         toast.error(res?.message || "Failed to change pin");
       }
-    } catch (error) {
-      console.error("Change Pin Error:", error);
+    } catch {
       toast.error("Something went wrong. Please try again.");
     } finally {
       setLoading(false);

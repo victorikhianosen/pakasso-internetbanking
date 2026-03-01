@@ -78,7 +78,6 @@ export default function DataPage() {
       platform: "web",
     };
 
-    console.log(payload);
 
     try {
       setLoading(true);

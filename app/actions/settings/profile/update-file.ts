@@ -34,8 +34,7 @@ export async function UploadFile(
     });
 
     return await res.json();
-  } catch (error) {
-    console.error("UploadFile error:", error);
+  } catch {
 
     return {
       responseCode: "500",

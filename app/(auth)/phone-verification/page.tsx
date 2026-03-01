@@ -77,7 +77,6 @@ export default function PhoneVerificationPage() {
     try {
       const payload = { phone, otp: code };
       const res = await verifyPhoneOtp(payload);
-      console.log(res);
 
       if (res.status === "success" && res.responseCode === "000") {
         toast.success(res.message);
@@ -109,7 +108,6 @@ export default function PhoneVerificationPage() {
       };
 
       const res = await resentOtp(payload);
-      console.log(res);
 
       if (res.status === "success") {
         toast.success(res.message);

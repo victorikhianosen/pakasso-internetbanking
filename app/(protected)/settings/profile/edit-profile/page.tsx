@@ -32,7 +32,6 @@ export default function EditProfilePage() {
   // ✅ Safe logging
   useEffect(() => {
     if (displayUser) {
-      console.log("Displaying User:", displayUser.profilepic);
       setForm(displayUser);
     }
   }, [displayUser]);

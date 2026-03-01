@@ -66,7 +66,6 @@ export default function LoginPage() {
         setLocationError(false);
       },
       (err) => {
-        console.error("Location Error:", err);
         setLocationAllowed(false);
         setLocationError(true);
         if (err.code === 1) {
@@ -113,12 +112,8 @@ export default function LoginPage() {
         device_token: deviceId,
       };
 
-      // console.log("LOGIN PAYLOAD:", payload);
-
       const res = await login(payload);
-      console.log("LOGIN RESPONSE:", res);
       if (res?.responseCode === "000") {
-        console.log(res);
 
         toast.success("Login successful");
         setTimeout(() => router.push("/dashboard"), 2000);
@@ -127,8 +122,7 @@ export default function LoginPage() {
 
       toast.error(res?.message || "Request failed");
       setApiError(res?.message || "Invalid credentials");
-    } catch (err) {
-      console.error("LOGIN ERROR:", err);
+    } catch {
       toast.error("internal server error");
     } finally {
       setLoading(false);
