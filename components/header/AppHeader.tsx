@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import Logout from "@/features/auth/hooks/Logout";
+import Logout from "@/features/auth/services/Logout";
 import Link from "next/link";
 import { UseUser } from "@/context/UserContext";
 import { Bell } from "lucide-react";
