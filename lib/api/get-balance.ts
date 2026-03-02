@@ -3,8 +3,17 @@ export async function fetchBalance() {
     headers: {
       Accept: "application/json",
     },
-    credentials: "include", // sends cookies automatically
+    credentials: "include",
   });
+
+  // Handle Unauthorized
+  if (res.status === 401) {
+    sessionStorage.clear();
+    localStorage.clear();
+
+    window.location.href = "/login";
+    return;
+  }
 
   if (!res.ok) {
     throw new Error("Failed to fetch balance");

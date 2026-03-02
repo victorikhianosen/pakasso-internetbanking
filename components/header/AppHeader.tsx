@@ -5,7 +5,6 @@ import { useState } from "react";
 import Logout from "@/features/auth/services/Logout";
 import Link from "next/link";
 import { UseUser } from "@/context/UserContext";
-import { Bell } from "lucide-react";
 
 export default function AppHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -23,18 +22,13 @@ export default function AppHeader() {
             alt="Logo"
             width={120}
             height={32}
-            className="h-8 w-auto"
+            className="h-10 w-auto"
             priority
           />
-          <span className="font-semibold text-primary hidden md:block">Internet Banking</span>
         </div>
 
         {/* RIGHT */}
         <div className="flex items-center gap-2">
-          <button className="bg-primary text-white  px-3 py-2 rounded-lg text-sm hidden md:block">
-            <Bell />
-          </button>
-
           <div className="relative">
             <button
               onClick={() => setMenuOpen((prev) => !prev)}

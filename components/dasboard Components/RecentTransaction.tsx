@@ -3,6 +3,7 @@
 import { ArrowUpRight, ArrowDownLeft } from "lucide-react";
 import { TransactionItem } from "@/types/transaction.types";
 import { useRouter } from "next/navigation";
+import { formatDateTime } from "@/utils/formatDateTime";
 
 export default function RecentTransaction({
   transactions = [],
@@ -13,23 +14,7 @@ export default function RecentTransaction({
 }) {
   /* ---------------- Title logic ---------------- */
   const getTitle = (t: TransactionItem) => {
-    if (t.transfer_type === "inward_transfer") {
-      return `Transfer From ${t.sender_name}`;
-    }
-
-    if (t.transfer_type === "wallet_transfer" || t.transfer_type === "bank_transfer") {
-      return `Transfer To ${t.recipient_name}`;
-    }
-
-    if (t.transfer_type === "data") {
-      return `Purchased  ${t.transfer_type}`;
-    }
-
-    if (t.transfer_type === "artime") {
-      return `Purchased  ${t.transfer_type}`;
-    }
-
-    return t.recipient_name || "Transaction";
+    return t.notes || "Transaction";
   };
 
   const router = useRouter();
@@ -59,7 +44,7 @@ export default function RecentTransaction({
         )}
 
         {transactions.slice(0, 4).map((t, index) => {
-          const isDebit = t.transaction_type === "debit";
+          const isDebit = t.type === "debit";
 
           return (
             <div
@@ -75,7 +60,7 @@ export default function RecentTransaction({
 
                 <div className="overflow-hidden">
                   <p className="font-medium text-sm truncate">{getTitle(t)}</p>
-                  <p className="text-xs text-gray-400">{t.created_at}</p>
+                  <p className="text-xs text-gray-400">{formatDateTime(t.created_at)}</p>
                 </div>
               </div>
 
