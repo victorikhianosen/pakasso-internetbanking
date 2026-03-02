@@ -49,7 +49,7 @@ export default function RecentTransaction({
           return (
             <div
               key={index}
-              className="w-full flex items-center justify-between bg-gray-50 hover:bg-gray-100 cursor-pointer transition rounded-xl p-4"
+              className="w-full flex items-center justify-between bg-gray-50 hover:bg-gray-100 cursor-pointer transition rounded-xl p-2 lg:p-4 py-4"
               onClick={() => router.push(`/transactions/receipt/${t.reference_no}`)}
               >
               <div className="flex items-center gap-3 min-w-0 w-[80%]">
