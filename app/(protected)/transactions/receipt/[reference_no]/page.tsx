@@ -1,9 +1,8 @@
 "use client";
 
-import { ArrowLeft, House, Share2 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { ArrowLeft, House } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
 import { UseGetTransactionReceipt } from "@/hooks/useTransactionReceipt";
-import { useSearchParams } from "next/navigation";
 import { formatDateTime } from "@/utils/formatDateTime";
 import { formatNumber } from "@/utils/formatNumber";
 import successAnimation from "@/public/assets/animations/success.json";
@@ -14,8 +13,8 @@ import { ReceiptSkeleton } from "@/components/loading components/receiptSkeleton
 
 export default function ReceiptPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const referenceNo = searchParams.get("reference_no");
+  const params = useParams();
+  const referenceNo = params?.reference_no as string;
 
   const formatTransactionType = (transactionType: string) => {
   return transactionType
