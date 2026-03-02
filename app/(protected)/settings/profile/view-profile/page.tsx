@@ -52,7 +52,7 @@ function ProfileHeader({ user }: { user: UserType | null }) {
               {user?.profilepic ? (
                 <Image
                   src={user.profilepic}
-                  alt="Passport Preview"
+                  alt="Profile Picture"
                   width={112}
                   height={112}
                   className="w-full h-full object-cover"

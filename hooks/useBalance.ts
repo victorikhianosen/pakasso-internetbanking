@@ -9,6 +9,6 @@ export const UseGetBalance = () => {
     refetchOnWindowFocus: false,
     refetchOnMount: true,
     refetchInterval: 15000,
-    staleTime: 5 * 60 * 1000, // 5 minutes,
+    staleTime: 5 * 60 * 1000,
   });
 };

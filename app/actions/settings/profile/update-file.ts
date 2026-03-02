@@ -34,8 +34,8 @@ export async function UploadFile(
     });
 
     return await res.json();
-  } catch {
-
+  } catch (error){
+    console.log(error)
     return {
       responseCode: "500",
       message: "Network error",

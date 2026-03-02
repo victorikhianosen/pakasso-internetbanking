@@ -107,7 +107,8 @@ function EditHeader({ user }: { user: UserType }) {
         toast.error(res.message);
         setPassportPreview(null);
       }
-    } catch {
+    } catch(error) {
+      console.error(error);
       toast.error("Upload failed");
       setPassportPreview(null);
     } finally {
@@ -144,7 +145,7 @@ function EditHeader({ user }: { user: UserType }) {
               {passportPreview ? (
                 <Image
                   src={passportPreview}
-                  alt="Passport Preview"
+                  alt="Profile Picture"
                   width={112}
                   height={112}
                   className="w-full h-full object-cover"
