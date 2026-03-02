@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 export default async function clearSession() {
 
     const cookieStore = await cookies();
-    const token = cookieStore.delete("access_token");
     cookieStore.delete("access_token");
     cookieStore.delete("refresh_token");
     cookieStore.delete("user");

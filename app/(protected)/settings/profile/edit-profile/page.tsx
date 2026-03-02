@@ -11,30 +11,17 @@ import Input from "@/components/ui/input";
 import { toast } from "react-toastify";
 import { User as UserType } from "@/types/user.types";
 import Image from "next/image";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function EditProfilePage() {
   const { user } = UseUser();
-
-  const [cachedUser, setCachedUser] = useState<UserType | null>(null);
   const [form, setForm] = useState<UserType | null>(null);
   const [saving, setSaving] = useState(false);
+  const queryClient = useQueryClient();
 
-  // Load cached user
   useEffect(() => {
-    const saved = localStorage.getItem("cachedUser");
-    if (saved) {
-      setCachedUser(JSON.parse(saved));
-    }
-  }, []);
-
-  const displayUser = user || cachedUser;
-
-  // ✅ Safe logging
-  useEffect(() => {
-    if (displayUser) {
-      setForm(displayUser);
-    }
-  }, [displayUser]);
+    setForm(user);
+  }, [user]);
 
   const handleChange = (key: keyof UserType, value: string) => {
     setForm((prev) => (prev ? { ...prev, [key]: value } : prev));
@@ -61,6 +48,7 @@ export default function EditProfilePage() {
 
       if (res.responseCode === "000") {
         toast.success(res.message);
+        queryClient.invalidateQueries({ queryKey: ["user"] });
       } else {
         toast.error(res.message);
       }
@@ -86,10 +74,9 @@ function EditHeader({ user }: { user: UserType }) {
   const router = useRouter();
   const [uploading, setUploading] = useState(false);
   const [passportPreview, setPassportPreview] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
-  const handleFileChange = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -103,12 +90,12 @@ function EditHeader({ user }: { user: UserType }) {
 
       if (res.responseCode === "000") {
         toast.success(res.message);
+        queryClient.invalidateQueries({ queryKey: ["user"] });
       } else {
         toast.error(res.message);
         setPassportPreview(null);
       }
-    } catch(error) {
-      console.error(error);
+    } catch {
       toast.error("Upload failed");
       setPassportPreview(null);
     } finally {
@@ -130,8 +117,7 @@ function EditHeader({ user }: { user: UserType }) {
       <button
         type="button"
         onClick={() => router.back()}
-        className="flex cursor-pointer items-center gap-2 mb-4 text-sm font-medium text-primary hover:-translate-x-1 transition"
-      >
+        className="flex cursor-pointer items-center gap-2 mb-4 text-sm font-medium text-primary hover:-translate-x-1 transition">
         <ArrowLeft size={18} />
         Back
       </button>
@@ -140,15 +126,14 @@ function EditHeader({ user }: { user: UserType }) {
         <div className="flex flex-col md:flex-row items-center gap-6">
           <div className="relative">
             <div className="w-28 h-28 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-4xl font-bold overflow-hidden">
-              
-              {/* ✅ PRIORITY: Preview → Existing Image → Initials */}
+              {/* PRIORITY: Preview → Existing Image → Initials */}
               {passportPreview ? (
                 <Image
                   src={passportPreview}
                   alt="Profile Picture"
                   width={112}
                   height={112}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover rounded-full"
                 />
               ) : user?.profilepic ? (
                 <Image
@@ -156,7 +141,7 @@ function EditHeader({ user }: { user: UserType }) {
                   alt="Profile"
                   width={112}
                   height={112}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover rounded-full"
                 />
               ) : (
                 <>
@@ -177,26 +162,15 @@ function EditHeader({ user }: { user: UserType }) {
             <button
               type="button"
               disabled={uploading}
-              onClick={() =>
-                document.getElementById("passportUpload")?.click()
-              }
-              className="absolute -bottom-1 -right-1 bg-white text-primary p-2 rounded-full shadow hover:scale-95 transition flex items-center justify-center"
-            >
-              {uploading ? (
-                <Loader2 size={16} className="animate-spin" />
-              ) : (
-                <Camera size={16} />
-              )}
+              onClick={() => document.getElementById("passportUpload")?.click()}
+              className="absolute -bottom-1 -right-1 bg-white text-primary p-2 rounded-full shadow hover:scale-95 transition flex items-center justify-center">
+              {uploading ? <Loader2 size={16} className="animate-spin" /> : <Camera size={16} />}
             </button>
           </div>
 
           <div className="text-center md:text-left">
-            <h1 className="text-3xl font-semibold tracking-tight">
-              Edit Profile
-            </h1>
-            <p className="opacity-80 text-sm mt-1">
-              Update your personal information
-            </p>
+            <h1 className="text-3xl font-semibold tracking-tight">Edit Profile</h1>
+            <p className="opacity-80 text-sm mt-1">Update your personal information</p>
           </div>
         </div>
       </div>
@@ -215,9 +189,7 @@ function EditDetails({
 }) {
   return (
     <div className="bg-white rounded-3xl p-7 shadow-sm border border-gray-100 mt-6">
-      <h3 className="font-semibold text-primary mb-6 text-lg">
-        Personal Information
-      </h3>
+      <h3 className="font-semibold text-primary mb-6 text-lg">Personal Information</h3>
 
       <div className="grid md:grid-cols-2 gap-5">
         <Input label="First Name" value={form.first_name} disabled />
@@ -245,8 +217,7 @@ function EditDetails({
       <button
         type="submit"
         disabled={saving}
-        className="mt-8 w-full bg-primary text-white py-3 rounded-xl font-semibold hover:opacity-90 transition flex items-center justify-center gap-2"
-      >
+        className="mt-8 w-full bg-primary text-white py-3 rounded-xl font-semibold hover:opacity-90 transition flex items-center justify-center gap-2">
         {saving && <Loader2 className="animate-spin" size={18} />}
         Save Changes
       </button>

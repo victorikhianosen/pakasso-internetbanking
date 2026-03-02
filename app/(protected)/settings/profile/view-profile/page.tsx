@@ -55,7 +55,7 @@ function ProfileHeader({ user }: { user: UserType | null }) {
                   alt="Profile Picture"
                   width={112}
                   height={112}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover rounded-full"
                 />
               ) : (
                 <>
