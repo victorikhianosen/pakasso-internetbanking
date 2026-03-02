@@ -8,7 +8,6 @@ export const UseGetBalance = () => {
     queryFn: fetchBalance,
     refetchOnWindowFocus: false,
     refetchOnMount: true,
-    refetchInterval: 15000,
-    staleTime: 5 * 60 * 1000,
+    refetchInterval: 20000,
   });
 };
