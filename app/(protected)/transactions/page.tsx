@@ -74,8 +74,7 @@ export default function TransactionsPage() {
               <div
                 key={index}
                 className="w-full flex items-center justify-between bg-gray-50 hover:bg-gray-100 transition rounded-xl p-4"
-                onClick={() => router.push(`/transactions/receipt/${t.reference_no}`)}
-                >
+                onClick={() => router.push(`/transactions/receipt/${t.reference_no}`)}>
                 <div className="flex items-center gap-3 min-w-0 w-[80%]">
                   <div
                     className={`p-2 rounded-xl ${
@@ -90,12 +89,18 @@ export default function TransactionsPage() {
                   </div>
                 </div>
 
-                <p
-                  className={`flex font-semibold text-sm w-[20%] justify-end ${
-                    isDebit ? "text-red-500" : "text-green-600"
-                  }`}>
-                  {isDebit ? "−" : "+"} ₦{Number(t.amount).toLocaleString()}
-                </p>
+                <div className="justify-end flex flex-col w-[20%] mx-auto items-end">
+                  <p
+                    className={`font-semibold text-sm ${
+                      isDebit ? "text-red-500" : "text-green-600"
+                    }`}> 
+                    {isDebit ? "−" : "+"} ₦{Number(t.amount).toLocaleString()}
+                  </p>
+                  <p
+                    className={`text-xs ${(t.status === "success" && "text-green-600 bg-green-100 px-2 py-1 rounded-xl") || (t.status === "failed" && "text-red-600 bg-red-100 p-2 rounded-xl")} || ${t.status === "processing" && "text-yellow-600 bg-yellow-100  px-2 py-1 rounded-xl"}`}>
+                    {t.status}
+                  </p>
+                </div>
               </div>
             );
           })}

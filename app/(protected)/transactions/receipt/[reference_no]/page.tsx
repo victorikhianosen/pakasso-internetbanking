@@ -75,7 +75,7 @@ export default function ReceiptPage() {
                     animationData={processingAnimation}
                     loop
                     autoplay
-                    style={{ width: 300, height: 300, marginBottom: -50, marginTop: -50 }}
+                    style={{ width: 250, height: 250, marginBottom: -50, marginTop: -50 }}
                   />
                 </div>
               )}
@@ -85,7 +85,7 @@ export default function ReceiptPage() {
                     animationData={failedAnimation}
                     loop
                     autoplay
-                    style={{ width: 250, height: 250, marginBottom: -25, marginTop: -25 }}
+                    style={{ width: 250, height: 250, marginBottom: -50, marginTop: -50 }}
                   />
                 </div>
               )}
@@ -100,44 +100,44 @@ export default function ReceiptPage() {
             </>
             <div className="border-t border-b border-border w-full py-5 text-[15px]">
               <div className="w-full flex justify-between items-center">
-                <p className="w-1/2 font-semibold">Type</p>
-                <p className="w-1/2 text-right">{formatTransactionType(receipt?.data.type || "")}</p>
+                <p className="w-1/3 lg:w-1/2 font-semibold">Type</p>
+                <p className="w-2/3 lg:w-1/2 text-right">{formatTransactionType(receipt?.data.type || "")}</p>
               </div>
               {receipt?.data.destination_name && (
                 <div className="w-full flex justify-between items-center pt-2">
-                  <p className="w-1/2 font-semibold">Sender</p>
-                  <p className="w-1/2 text-right"> {receipt?.data.destination_name || ""} </p>
+                  <p className="w-1/3 lg:w-1/2 font-semibold">Sender</p>
+                  <p className="w-2/3 lg:w-1/2 text-right"> {receipt?.data.destination_name || ""} </p>
                 </div>
               )}
               {receipt?.data.trnx_type && (
                 <div className="w-full flex justify-between items-center pt-2">
-                  <p className="w-1/2 font-semibold">Transaction Type</p>
-                  <p className="w-1/2 text-right"> {formatTransactionType(receipt?.data.trnx_type || "")} </p>
+                  <p className="w-1/3 lg:w-1/2 font-semibold">Transaction Type</p>
+                  <p className="w-2/3 lg:w-1/2 text-right"> {formatTransactionType(receipt?.data.trnx_type || "")} </p>
                 </div>
               )}
               {receipt?.data.destination_account && (
                 <div className="w-full flex justify-between items-center pt-2">
-                  <p className="w-1/2 font-semibold">Recipient Info</p>
-                  <p className="w-1/2 text-right">{receipt?.data.destination_account}</p>
+                  <p className="w-1/3 lg:w-1/2 font-semibold">Recipient Info</p>
+                  <p className="w-2/3 lg:w-1/2 text-right">{receipt?.data.destination_account}</p>
                 </div>
               )}
               <div className="w-full flex justify-between items-center pt-2">
-                <p className="w-1/2 font-semibold">Transaction Reference</p>
-                <p className="w-1/2 text-right">{receipt?.data.reference_no}</p>
+                <p className="w-1/3 lg:w-1/2 font-semibold">Transaction Reference</p>
+                <p className="w-2/3 lg:w-1/2 text-right">{receipt?.data.reference_no}</p>
               </div>
               <div className="w-full flex justify-between items-center pt-2">
-                <p className="w-1/2 font-semibold">Date Created</p>
-                <p className="w-1/2 text-right">{formatDateTime(receipt?.data.created_at || "")}</p>
+                <p className="w-1/3 lg:w-1/2 font-semibold">Date Created</p>
+                <p className="w-2/3 lg:w-1/2 text-right">{formatDateTime(receipt?.data.created_at || "")}</p>
               </div>
               {receipt?.data.narration && (
                 <div className="w-full flex justify-between items-center pt-2">
-                  <p className="w-1/2 font-semibold">Naration</p>
-                  <p className="w-1/2 text-right">{receipt?.data.narration}</p>
+                  <p className="w-1/3 lg:w-1/2 font-semibold">Naration</p>
+                  <p className="w-2/3 lg:w-1/2 text-right">{receipt?.data.narration}</p>
                 </div>
               )}
               <div className="w-full flex justify-between items-center pt-2">
-                <p className="w-1/2 font-semibold">Description</p>
-                <p className="w-1/2 text-right">{receipt?.data.notes}</p>
+                <p className="w-1/3 lg:w-1/2 font-semibold">Description</p>
+                <p className="w-2/3 lg:w-1/2 text-right">{receipt?.data.notes}</p>
               </div>
             </div>
             <div className="w-full flex lg:flex-row flex-col gap-5 my-5 ">

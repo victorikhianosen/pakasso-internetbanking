@@ -64,12 +64,18 @@ export default function RecentTransaction({
                 </div>
               </div>
 
-              <p
-                className={`flex font-semibold text-sm w-[20%] justify-end ${
-                  isDebit ? "text-red-500" : "text-green-600"
-                }`}>
-                {isDebit ? "−" : "+"} ₦{Number(t.amount).toLocaleString()}
-              </p>
+              <div className="justify-end flex flex-col w-[20%] mx-auto items-end">
+                <p
+                  className={`font-semibold text-sm ${
+                    isDebit ? "text-red-500" : "text-green-600"
+                  }`}>
+                  {isDebit ? "−" : "+"} ₦{Number(t.amount).toLocaleString()}
+                </p>
+                <p
+                  className={`text-xs ${(t.status === "success" && "text-green-600 bg-green-100 px-2 py-1 rounded-xl") || (t.status === "failed" && "text-red-600 bg-red-100 p-2 rounded-xl")} || ${t.status === "processing" && "text-yellow-600 bg-yellow-100  px-2 py-1 rounded-xl"}`}>
+                  {t.status}
+                </p>
+              </div>
             </div>
           );
         })}
