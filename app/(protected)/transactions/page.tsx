@@ -5,28 +5,13 @@ import { ArrowDownLeft, ArrowLeft, ArrowUpRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useGetTransactions } from "@/hooks/useTransactions";
 import { TransactionItem } from "@/types/transaction.types";
+import { formatDateTime } from "@/utils/formatDateTime";
 
 export default function TransactionsPage() {
   const router = useRouter();
 
   const getTitle = (t: TransactionItem) => {
-    if (t.transfer_type === "inward_transfer") {
-      return `Transfer From ${t.sender_name}`;
-    }
-
-    if (t.transfer_type === "wallet_transfer" || t.transfer_type === "bank_transfer") {
-      return `Transfer To ${t.recipient_name}`;
-    }
-
-    if (t.transfer_type === "data") {
-      return `Purchased  ${t.transfer_type}`;
-    }
-
-    if (t.transfer_type === "artime") {
-      return `Purchased  ${t.transfer_type}`;
-    }
-
-    return t.recipient_name || "Transaction";
+    return t.notes || "Transaction";
   };
 
   /* ---------------- Fetch Transactions ---------------- */
@@ -83,12 +68,14 @@ export default function TransactionsPage() {
         {/* Transactions */}
         {!trxLoading &&
           paginatedTransactions.map((t: TransactionItem, index: number) => {
-            const isDebit = t.transaction_type === "debit";
+            const isDebit = t.type === "debit";
 
             return (
               <div
                 key={index}
-                className="w-full flex items-center justify-between bg-gray-50 hover:bg-gray-100 transition rounded-xl p-4">
+                className="w-full flex items-center justify-between bg-gray-50 hover:bg-gray-100 transition rounded-xl p-4"
+                onClick={() => {  router.push(`/transactions/receipt?reference_no=${t.reference_no}`)}}
+                >
                 <div className="flex items-center gap-3 min-w-0 w-[80%]">
                   <div
                     className={`p-2 rounded-xl ${
@@ -99,7 +86,7 @@ export default function TransactionsPage() {
 
                   <div className="overflow-hidden">
                     <p className="font-medium text-sm truncate">{getTitle(t)}</p>
-                    <p className="text-xs text-gray-400">{t.created_at}</p>
+                    <p className="text-xs text-gray-400">{formatDateTime(t.created_at)}</p>
                   </div>
                 </div>
 

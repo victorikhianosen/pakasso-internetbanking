@@ -25,7 +25,6 @@ export type BankTransfer = {
   platform: string;
   name_enquiry_ref: string;
   description: string;
-
 };
 
 export type WalletNameEnquiry = {
@@ -52,14 +51,36 @@ export type GetBalance = {
 };
 
 export type TransactionItem = {
+  id: number;
+  user_id: number | null;
+  customer_id: number;
+  branch_id: number | null;
   amount: string;
+  type: string;
+  device: string;
+  system_interest: number;
+  slip: string;
+  is_approve: string;
+  destination_account: string;
+  destination_name: string;
+  destination_bank_code: string;
+  provider_name: string;
+  provider_session_id: string;
+  provider_request: string;
+  provider_response: string;
+  narration: string;
+  transfer_type: string;
+  reference_no: string;
+  notes: string;
   status: string;
+  status_type: string;
+  trnx_type: string;
+  initiated_by: string;
+  approve_by: string | null;
+  approve_date: string | null;
   created_at: string;
-  transaction_no: string;
-  recipient_name: string | null;
-  sender_name?: string | null;
-  transaction_type?: "debit" | "credit";
-  transfer_type?: string;
+  updated_at: string;
+  bank: null;
 };
 
 // Transaction statistics
@@ -77,4 +98,42 @@ export type TransactionsResponse = {
   message: string;
   stats: TransactionStats;
   transactions: TransactionItem[];
+};
+
+export type TransactionReceipt = {
+  status: string;
+  responseCode: string;
+  message: string;
+  data: {
+    id: number;
+    user_id: number | null;
+    customer_id: number;
+    branch_id: number | null;
+    amount: string;
+    type: string;
+    device: string;
+    system_interest: number;
+    slip: string | null;
+    is_approve: string;
+    destination_account: string;
+    destination_name: string;
+    destination_bank_code: string;
+    provider_name: string;
+    provider_session_id: string;
+    provider_request: string;
+    provider_response: string;
+    narration: string;
+    transfer_type: string;
+    reference_no: string;
+    notes: string;
+    status: string;
+    status_type: string;
+    trnx_type: string;
+    initiated_by: string;
+    approve_by: string | null;
+    approve_date: string | null;
+    created_at: string;
+    updated_at: string;
+    bank: null;
+  };
 };
