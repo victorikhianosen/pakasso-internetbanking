@@ -11,7 +11,7 @@ export default function NotFoundPage() {
 
       {/* Glow background */}
       <div className="absolute inset-0">
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-primary/30 blur-[120px] rounded-full" />
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-125 h-125 bg-primary/30 blur-[120px] rounded-full" />
       </div>
 
       {/* Content */}
@@ -29,7 +29,7 @@ export default function NotFoundPage() {
         </div>
 
         {/* Animated 404 */}
-        <h1 className="text-[96px] font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#fee028] animate-float">
+        <h1 className="text-[96px] font-extrabold tracking-tight text-transparent bg-clip-text bg-linear-to-r from-primary to-[#fee028] animate-float">
           404
         </h1>
 

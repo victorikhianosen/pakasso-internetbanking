@@ -12,6 +12,7 @@ import TransferPinModal from "@/features/wallet/components/TransferPinModal";
 import SuccessModal from "@/components/shared/SuccessModal";
 import { UseGetBalance } from "@/hooks/useBalance";
 import { useQueryClient } from "@tanstack/react-query";
+import AddMoneyDialog from "@/components/dialog/addMoney";
 
 export default function WalletTransferPage() {
   const router = useRouter();
@@ -20,6 +21,7 @@ export default function WalletTransferPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [fullName, setFullName] = useState("");
+  const [open, setOpen] = useState(false);
 
   const [accountNumber, setAccountNumber] = useState("");
   const bankName = "Pakasso Credit Capital Ltd";
@@ -204,20 +206,15 @@ export default function WalletTransferPage() {
             {/* PROMO BANNER */}
             <div className="rounded-2xl bg-linear-to-r from-yellow-600 to-primary text-white px-8 lg:py-6 py-4 lg:flex items-center justify-between">
               <div>
-                <p className="text-sm opacity-90">Transfer to Other Banks</p>
+                <p className="text-sm opacity-90">Transfer to pakasso</p>
                 <p className="font-semibold mt-1">Use your balance to send money instantly</p>
                 <div className="text-4xl font-bold lg:hidden mt-4">₦{balance.toLocaleString()}</div>
-                <button className="mt-4 bg-black text-white text-sm px-4 py-2 rounded-lg">
-                  Top up Now
+                <button className="mt-4 bg-black text-white text-sm px-4 py-2 rounded-lg"  onClick={() => {setOpen(true)}}>
+                  Add Money
                 </button>
               </div>
 
               <div className="text-4xl font-bold hidden lg:block">₦{balance.toLocaleString()}</div>
-            </div>
-
-            {/* FREE TRANSFERS */}
-            <div className="bg-purple-50 text-purple-700 px-4 py-3 rounded-xl text-sm font-medium w-fit">
-              ⚡ Free transfers for the day: <strong>3</strong>
             </div>
 
             {/* FORM CARD */}
@@ -245,13 +242,13 @@ export default function WalletTransferPage() {
 
                 {/* NEXT BUTTON */}
                 <button
-                  className={`w-full cursor-pointer h-14 rounded-full font-semibold transition bg-primary text-white
+                  className={`w-full cursor-pointer h-14 rounded-xl font-semibold transition bg-primary text-white
                 `}>
                   Next
                 </button>
               </div>
             </form>
-
+             <AddMoneyDialog onClose={() => setOpen(false)} open={open} />
           </div>
         </div>
       </div>

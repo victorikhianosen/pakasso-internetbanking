@@ -14,6 +14,7 @@ import { useGetDataBundles } from "@/features/data/hooks/useDataBundle";
 import { DataBundleData } from "@/types/bill.types";
 import { useRef } from "react";
 import { buyData } from "@/app/actions/bills/data/buy-data.action";
+import AddMoneyDialog from "@/components/dialog/addMoney";
 
 const DataProviders = [
   { value: "mtn", label: "MTN", image: "/assets/images/airtime-data/mtn.png" },
@@ -28,6 +29,7 @@ export default function DataPage() {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const [phoneNumber, setPhoneNumber] = useState("");
   const [network, setNetwork] = useState<string>("");
@@ -77,7 +79,6 @@ export default function DataPage() {
       transaction_pin: pin,
       platform: "web",
     };
-
 
     try {
       setLoading(true);
@@ -136,7 +137,7 @@ export default function DataPage() {
             Back
           </button>
 
-          <div className="space-y-8 mt-6">
+          <div className="space-y-8">
             <div className="flex items-center justify-between">
               <h1 className="text-xl font-semibold text-primary">Buy Data</h1>
               <button
@@ -149,9 +150,14 @@ export default function DataPage() {
             {/* BALANCE CARD */}
             <div className="rounded-2xl bg-linear-to-r from-yellow-600 to-primary text-white px-8 py-6 flex items-center justify-between">
               <div>
-                <p className="text-sm opacity-90">Use your balance to purchase data</p>
-                <button className="mt-4 bg-black text-white text-sm px-4 py-2 rounded-lg">
-                  Top up Now
+                <p className="text-sm opacity-90">Purchase Data</p>
+                <p className="font-semibold mt-1">Use your balance to purchase data</p>
+                <button
+                  className="mt-4 bg-black text-white text-sm px-4 py-2 rounded-lg"
+                  onClick={() => {
+                    setOpen(true);
+                  }}>
+                  Add Money
                 </button>
               </div>
               <div className="text-3xl font-bold">₦{balance.toLocaleString()}</div>
@@ -208,7 +214,7 @@ export default function DataPage() {
                     <button
                       type="button"
                       onClick={() => setShowDataBundles((prev) => !prev)}
-                      className="w-full bg-white p-4 rounded-xl border border-border text-left"
+                      className="w-full bg-white p-3 rounded-xl border border-border text-left"
                       disabled={!network}>
                       {selectedBundle || "Select a bundle"}
                     </button>
@@ -245,7 +251,7 @@ export default function DataPage() {
                 <button
                   onClick={() => setShowPinModal(true)}
                   disabled={!isValid}
-                  className={`w-full h-14 rounded-full font-semibold transition ${
+                  className={`w-full h-14 rounded-xl font-semibold transition ${
                     isValid
                       ? "bg-primary text-white hover:opacity-90"
                       : "bg-primary/60 text-white cursor-not-allowed"
@@ -254,6 +260,8 @@ export default function DataPage() {
                 </button>
               </div>
             </div>
+
+            <AddMoneyDialog onClose={() => setOpen(false)} open={open} />
           </div>
         </div>
       </div>

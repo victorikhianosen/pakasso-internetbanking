@@ -11,6 +11,7 @@ import BuyAirtimePinModal from "../../../../features/data/components/BuyDataPinM
 import { toast } from "react-toastify";
 import { buyAirtime } from "@/app/actions/bills/airtime/buy-airtime.action";
 import { UseGetBalance } from "@/hooks/useBalance";
+import AddMoneyDialog from "@/components/dialog/addMoney";
 
 // airtime providers list
 const airtimeProviders = [
@@ -22,8 +23,10 @@ const airtimeProviders = [
 
 export default function AirtimePage() {
   const router = useRouter();
+
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState("");
+  const [open, setOpen] = useState(false);
 
   const [phoneNumber, setPhoneNumber] = useState("");
   const [network, setNetwork] = useState<string>("");
@@ -122,20 +125,15 @@ export default function AirtimePage() {
             {/* PROMO BANNER */}
             <div className="rounded-2xl bg-linear-to-r from-yellow-600 to-primary text-white px-8 lg:py-6 py-4 lg:flex items-center justify-between">
               <div>
-                <p className="text-sm opacity-90">Transfer to Other Banks</p>
-                <p className="font-semibold mt-1">Use your balance to send money instantly</p>
+                <p className="text-sm opacity-90">Purchase Airtime</p>
+                <p className="font-semibold mt-1">Use your balance to buy airtime instantly</p>
                 <div className="text-4xl font-bold lg:hidden mt-4">₦{balance}</div>
-                <button className="mt-4 bg-black text-white text-sm px-4 py-2 rounded-lg">
-                  Top up Now
+                <button className="mt-4 bg-black text-white text-sm px-4 py-2 rounded-lg"onClick={() => {setOpen(true)}}>
+                  Add Money
                 </button>
               </div>
 
               <div className="text-4xl font-bold hidden lg:block">₦{balance.toLocaleString()}</div>
-            </div>
-
-            {/* FREE TRANSFERS */}
-            <div className="bg-purple-50 text-purple-700 px-4 py-3 rounded-xl text-sm font-medium w-fit">
-              ⚡ Free airtime purchase for the day: <strong>3</strong>
             </div>
 
             {/* FORM CARD */}
@@ -197,7 +195,7 @@ export default function AirtimePage() {
                 <button
                   onClick={() => setShowPinModal(true)}
                   disabled={!isValid}
-                  className={`w-full h-14  rounded-full font-semibold transition
+                  className={`w-full h-14  rounded-xl font-semibold transition
                 ${
                   isValid
                     ? "bg-primary text-white hover:opacity-90 cursor-pointer"
@@ -207,7 +205,7 @@ export default function AirtimePage() {
                 </button>
               </div>
             </div>
-
+                <AddMoneyDialog onClose={() => setOpen(false)} open={open} />
           </div>
         </div>
       </div>

@@ -3,9 +3,8 @@
 import { UseUser } from "@/context/UserContext";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
-import { UseGetUserDetails } from "@/hooks/useUserDetails";
 
 type Props = {
   balance: string;
@@ -13,15 +12,8 @@ type Props = {
 };
 
 export default function BalanceCard({ balance, loading = false }: Props) {
-  const { user, setUser } = UseUser();
-  const { data } = UseGetUserDetails();
+  const { user } = UseUser();
   const [balanceVisible, setBalanceVisible] = useState(true);
-
-  useEffect(() => {
-    if (data) {
-      setUser(data.data);
-    }
-  }, [data, setUser]);
 
   const toggleBalance = () => {
     setBalanceVisible((prev) => !prev);

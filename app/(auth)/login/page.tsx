@@ -114,8 +114,8 @@ export default function LoginPage() {
 
       const res = await login(payload);
       if (res?.responseCode === "000") {
-
         toast.success("Login successful");
+        localStorage.setItem("access_token", res.data.access_token);
         setTimeout(() => router.push("/dashboard"), 2000);
         return;
       }

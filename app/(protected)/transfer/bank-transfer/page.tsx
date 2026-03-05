@@ -14,14 +14,17 @@ import Select from "react-select";
 import { GetBanksData } from "@/types/transaction.types";
 import { useQueryClient } from "@tanstack/react-query";
 import { UseGetBalance } from "@/hooks/useBalance";
+import AddMoneyDialog from "@/components/dialog/addMoney";
 
 export default function BankTransferPage() {
   const router = useRouter();
+
   const [account, setAccount] = useState("");
   const [bankCode, setBankCode] = useState("");
   const [banks, setBanks] = useState<GetBanksData[]>([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState("");
+  const [open, setOpen] = useState(false);
 
   const [fullName, setFullName] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
@@ -175,7 +178,9 @@ export default function BankTransferPage() {
           <div className="space-y-8">
             <div className="flex items-center justify-between">
               <h1 className="text-xl font-semibold text-primary">Transfer To Other Bank</h1>
-              <button className="text-sm font-medium text-green-600 hover:underline" onClick={() => router.push("/transactions")}>
+              <button
+                className="text-sm font-medium text-green-600 hover:underline"
+                onClick={() => router.push("/transactions")}>
                 History
               </button>
             </div>
@@ -186,17 +191,12 @@ export default function BankTransferPage() {
                 <p className="text-sm opacity-90">Transfer to Other Banks</p>
                 <p className="font-semibold mt-1">Use your balance to send money instantly</p>
                 <div className="text-4xl font-bold lg:hidden mt-4">₦{balance}</div>
-                <button className="mt-4 bg-black text-white text-sm px-4 py-2 rounded-lg">
-                  Top up Now
+                <button className="mt-4 bg-black text-white text-sm px-4 py-2 rounded-lg" onClick={() => {setOpen(true)}}>
+                  Add Money
                 </button>
               </div>
 
               <div className="text-4xl font-bold hidden lg:block">₦{balance.toLocaleString()}</div>
-            </div>
-
-            {/* FREE TRANSFERS */}
-            <div className="bg-purple-50 text-purple-700 px-4 py-3 rounded-xl text-sm font-medium w-fit">
-              ⚡ Free transfers for the day: <strong>3</strong>
             </div>
 
             {/* FORM CARD */}
@@ -273,7 +273,7 @@ export default function BankTransferPage() {
                 <button
                   onClick={handleVerifyBanks}
                   disabled={!isValid}
-                  className={`w-full h-14  rounded-full font-semibold transition
+                  className={`w-full h-14 rounded-xl font-semibold transition
                 ${
                   isValid
                     ? "bg-primary text-white hover:opacity-90 cursor-pointer"
@@ -283,7 +283,7 @@ export default function BankTransferPage() {
                 </button>
               </div>
             </div>
-
+            <AddMoneyDialog onClose={() => setOpen(false)} open={open} />
           </div>
         </div>
       </div>
