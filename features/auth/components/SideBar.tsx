@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 
 export default function SideBar() {
@@ -25,9 +26,11 @@ export default function SideBar() {
 
       {/* LOGO — TOP LEFT */}
       <Link href="/login" className="absolute top-10 left-14 z-10 cursp">
-        <img
+        <Image
           src="/assets/images/logo.png"
           alt="Pakasso"
+          width={120}
+          height={100}
           className="h-12 object-contain"
         />
       </Link>
