@@ -13,7 +13,7 @@ type Props = {
 
 export default function BalanceCard({ balance, loading = false }: Props) {
   const { user } = UseUser();
-  const [balanceVisible, setBalanceVisible] = useState(true);
+  const [balanceVisible, setBalanceVisible] = useState(false);
 
   const toggleBalance = () => {
     setBalanceVisible((prev) => !prev);
@@ -45,7 +45,7 @@ export default function BalanceCard({ balance, loading = false }: Props) {
                 ? "Loading..."
                 : balanceVisible
                 ? `${user?.currency ?? "₦"}${balance}`
-                : "•••••••"}
+                : "₦ •••••"}
             </h1>
 
             <button onClick={toggleBalance}>

@@ -26,7 +26,6 @@ export const metadata: Metadata = {
     "Deposit",
     "Payment",
   ],
-  icons: "./favicon.ico",
   openGraph: {
     title: "Pakasso - Trusted Credit & Finance Partner",
     description:
@@ -34,6 +33,16 @@ export const metadata: Metadata = {
     url: "https://pakassocreditandcapital.com/",
     siteName: "Pakasso Credit and Capital Ltd",
     type: "website",
+    locale: "en_NG",
+  },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/assets/images/apple-touch-icon.png",
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 
