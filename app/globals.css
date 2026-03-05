@@ -11,51 +11,44 @@
   --secondary: #fee028;
   --secondary-foreground: #29333f;
 
-
   --muted: #f7f7f7;
   --border: #e5e7eb;
-
-
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 
-   --color-primary: var(--primary);
+  --font-sans: var(--font-be-vietnam-pro);
+
+  --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
 
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
 
   --color-muted: var(--muted);
-  --color-border: var(--border)
+  --color-border: var(--border);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* --background: #0a0a0a;
-    --foreground: #ededed;
-
-        --primary: #ffffff;
-    --primary-foreground: #0a0a0a;
-
-    --secondary: #fee028;
-    --secondary-foreground: #0a0a0a;
-
-    --muted: #111111;
-    --border: #222222; */
+    /* Optional dark mode setup later */
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Helvetica, sans-serif;
+  font-family:
+    var(--font-be-vietnam-pro),
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  box-sizing: border-box;
 }
-
 
 .hideNumberSpinnerStyles {
   input[type="number"]::-webkit-outer-spin-button,
